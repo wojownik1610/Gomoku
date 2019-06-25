@@ -90,6 +90,14 @@
     width: 120px;
     font-size: 15px
 }
+#guziczki
+{
+    text-align: center;
+}
+#guziczkiNag
+{
+    font-size: 14px;
+}
 .wnap
 {
     height: 20px;
@@ -111,11 +119,11 @@
     padding-top: 9px;
     text-align: center;
     color: brown;
-    font-size: 17px;
+    font-size: 18px;
 }
 .dane
 {
-    font-size: 14px;
+    font-size: 15px;
 }
 .pola
 {

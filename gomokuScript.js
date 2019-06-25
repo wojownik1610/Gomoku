@@ -21,6 +21,11 @@ var wygrany="X";
 var zajPolaAkt;
 var zajPolaNajw=0;
 var zajPolaNajm=0;
+var zaczynajacy="X";
+var kolejneRuchyX = [];
+var kolejneRuchyY = [];
+var aktPokazRuch;
+
 for(var i=0; i<15; i++) wybrane[i]=[];
 for(var i=0; i<15; i++){
     for(var j=0; j<15; j++){
@@ -30,7 +35,12 @@ for(var i=0; i<15; i++){
 
 function poczatek(){
    var nazwa;
+    kolejneRuchyX.splice(0,kolejneRuchyX.length);
+    kolejneRuchyY.splice(0, kolejneRuchyY.length);
+    document.getElementById("guziczki").style.display="none";
     zajPolaAkt=0;
+    poprzedniRuchX=15;
+    poprzedniRuchY=15;
     ktoZaczyna=document.getElementById("startWybor").value;
     document.getElementById("zajPolaAkt").innerHTML="<b>Akt zapełnienie</b><br>"+zajPolaAkt+"/225 "+Math.floor(10000*zajPolaAkt/225)/100+"%";
     document.getElementById("zajPolaNajw").innerHTML="<b>Max zapełnienie</b><br>"+zajPolaNajw+"/225 "+Math.floor(10000*zajPolaNajw/225)/100+"%";
@@ -59,20 +69,35 @@ function poczatek(){
     switch (ktoZaczyna){
         case "5": 
             ruchKomp(0,0);
+            zaczynajacy="O";
+            zajPolaAkt++;
             break;
         case "3":
             if(przegrany=="O"){
                 ruchKomp(0,0);
+                zaczynajacy="O";
+                zajPolaAkt++;
             }
             break;
         case "2":
             if(wygrany=="O"){
                 ruchKomp(0,0);
+                zaczynajacy="O";
+                zajPolaAkt++;
             }
             break;
         case "1":
             if(Math.floor(Math.random()*2)==1){
                 ruchKomp(0,0);
+                zaczynajacy="O";
+                zajPolaAkt++;
+            }
+            break;
+        case "6":
+            if(zaczynajacy=="X"){
+                ruchKomp(0,0);
+                zaczynajacy="O";
+                zajPolaAkt++;
             }
             break;
     }
@@ -84,9 +109,12 @@ function wybor(i, j){
     if(wybrane[i][j]!="P") return;
     kolejGracza=false; 
     zajPolaAkt++;
+    if(zajPolaAkt==1) zaczynajacy="X";
     var nazwa="pole["+i+"]["+j+"]";
     wybrane[i][j]="X";
     document.getElementById(nazwa).innerHTML="X";
+    kolejneRuchyX.push(i);
+    kolejneRuchyY.push(j);
     if(sprWyg(i, j)==false && zajPolaAkt<225){
         zajPolaAkt++;
         if(ruchKomp(i,j)!=true && zajPolaAkt<225){
@@ -239,12 +267,20 @@ function wygrana(znak){
     }
     if(zajPolaAkt>zajPolaNajw) zajPolaNajw=zajPolaAkt;
     if(zajPolaNajm==0 || zajPolaNajm>zajPolaAkt) zajPolaNajm=zajPolaAkt;
+    document.getElementById("guziczki").style.display="block";
+    aktPokazRuch=kolejneRuchyX.length-1;
+    document.getElementById("guziczkiKtory").innerHTML=kolejneRuchyX.length+"/"+kolejneRuchyX.length; 
     return;
 }
 
 function ruchKomp(x, y){
     /*  1. piątka kompa*/
-    
+    for(var i=0; i<15; i++){
+        for(var j=0; j<15; j++){
+             nazwa="pole["+i+"]["+j+"]";
+            document.getElementById(nazwa).style.backgroundColor="cornflowerblue";
+        }
+    }
     if(trudnosc>1 && piatka(true)){
         return true;
     }
@@ -324,9 +360,11 @@ function ruchKomp(x, y){
         var yWyb=Math.floor(Math.random()*15);
     }while(wybrane[xWyb][yWyb]=="X" || wybrane[xWyb][yWyb]=="O" || wybrane[xWyb][yWyb]=="W")
         wybrane[xWyb][yWyb]="O";
+        kolejneRuchyX.push(xWyb);
+        kolejneRuchyY.push(yWyb);
         var nazwa="pole["+xWyb+"]["+yWyb+"]";
-        document.getElementById(nazwa).innerHTML="O";
-    //sprWyg(xWyb, yWyb);
+        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
+    sprWyg(xWyb, yWyb);
 }
 
 function piatka(ruch){
@@ -360,8 +398,10 @@ function piatka(ruch){
                 for(var i=0; i<5; i++){
                     if(wybrane[x+i][y]=="P"){
                         wybrane[x+i][y]="O";
+                        kolejneRuchyX.push(x+i);
+                        kolejneRuchyY.push(y);
                         var nazwa="pole["+(x+i)+"]["+y+"]";
-                        document.getElementById(nazwa).innerHTML="O";
+                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
                         sprWyg(x+i, y);
                     
                         return true;
@@ -401,8 +441,10 @@ function piatka(ruch){
                 for(var i=0; i<5; i++){
                     if(wybrane[x][y+i]=="P"){
                         wybrane[x][y+i]="O";
+                        kolejneRuchyX.push(x);
+                        kolejneRuchyY.push(y+i);
                         var nazwa="pole["+x+"]["+(y+i)+"]";
-                        document.getElementById(nazwa).innerHTML="O";
+                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
                       sprWyg(x, y+i);
                         return true;
                     }
@@ -441,8 +483,10 @@ function piatka(ruch){
                 for(var i=0; i<5; i++){
                     if(wybrane[x+i][y+i]=="P"){
                         wybrane[x+i][y+i]="O";
+                        kolejneRuchyX.push(x+i);
+                        kolejneRuchyY.push(y+i);
                         var nazwa="pole["+(x+i)+"]["+(y+i)+"]";
-                        document.getElementById(nazwa).innerHTML="O";
+                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
                      sprWyg(x+i, y+i);
                         return true;
                     }
@@ -481,8 +525,10 @@ function piatka(ruch){
                 for(var i=0; i<5; i++){
                     if(wybrane[x+i][y-i]=="P"){
                         wybrane[x+i][y-i]="O";
+                        kolejneRuchyX.push(x+i);
+                        kolejneRuchyY.push(y-i);
                         var nazwa="pole["+(x+i)+"]["+(y-i)+"]";
-                        document.getElementById(nazwa).innerHTML="O";
+                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
                     sprWyg(x+i, y-i);
                         return true;
                     }
@@ -552,8 +598,10 @@ function czteryOb(ruch){
                     }
                 }
                         wybrane[wspX][wspY]="O";
+                        kolejneRuchyX.push(wspX);
+                        kolejneRuchyY.push(wspY);
                         var nazwa="pole["+wspX+"]["+wspY+"]";
-                        document.getElementById(nazwa).innerHTML="O";
+                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
                         return true;
             }
             if(ile==41 && !ruch){
@@ -613,8 +661,10 @@ function czteryOb(ruch){
                     }
                 }
                         wybrane[wspX][wspY]="O";
+                        kolejneRuchyX.push(wspX);
+                        kolejneRuchyY.push(wspY);
                         var nazwa="pole["+wspX+"]["+wspY+"]";
-                        document.getElementById(nazwa).innerHTML="O";
+                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
                         return true;
             }
             if(ile==41 && !ruch){
@@ -674,8 +724,10 @@ function czteryOb(ruch){
                     }
                 }
                         wybrane[wspX][wspY]="O";
+                        kolejneRuchyX.push(wspX);
+                        kolejneRuchyY.push(wspY);
                         var nazwa="pole["+wspX+"]["+wspY+"]";
-                        document.getElementById(nazwa).innerHTML="O";
+                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
                         return true;
             }
             if(ile==41 && !ruch){
@@ -735,8 +787,10 @@ function czteryOb(ruch){
                     }
                 }
                         wybrane[wspX][wspY]="O";
+                        kolejneRuchyX.push(wspX);
+                        kolejneRuchyY.push(wspY);
                         var nazwa="pole["+wspX+"]["+wspY+"]";
-                        document.getElementById(nazwa).innerHTML="O";
+                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
                         return true;
             }
             if(ile==41 && !ruch){
@@ -780,8 +834,10 @@ function czteryWyg(ruch){
                 for(var i=1; i<5; i++){
                     if(wybrane[x+i][y]=="P"){
                         wybrane[x+i][y]="O";
+                        kolejneRuchyX.push(x+i);
+                        kolejneRuchyY.push(y);
                         var nazwa="pole["+(x+i)+"]["+y+"]";
-                        document.getElementById(nazwa).innerHTML="O"; 
+                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral"; 
                         return true;
                     }
                 }
@@ -820,8 +876,10 @@ function czteryWyg(ruch){
                 for(var i=1; i<5; i++){
                     if(wybrane[x][y+i]=="P"){
                         wybrane[x][y+i]="O";
+                        kolejneRuchyX.push(x);
+                        kolejneRuchyY.push(y+i);
                         var nazwa="pole["+x+"]["+(y+i)+"]";
-                        document.getElementById(nazwa).innerHTML="O"; 
+                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral"; 
                         return true;
                     }
                 }
@@ -860,8 +918,10 @@ function czteryWyg(ruch){
                 for(var i=1; i<5; i++){
                     if(wybrane[x+i][y+i]=="P"){
                         wybrane[x+i][y+i]="O";
+                        kolejneRuchyX.push(x+i);
+                        kolejneRuchyY.push(y+i);
                         var nazwa="pole["+(x+i)+"]["+(y+i)+"]";
-                        document.getElementById(nazwa).innerHTML="O"; 
+                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral"; 
                         return true;
                     }
                 }
@@ -900,8 +960,10 @@ function czteryWyg(ruch){
                 for(var i=1; i<5; i++){
                     if(wybrane[x+i][y-i]=="P"){
                         wybrane[x+i][y-i]="O";
+                        kolejneRuchyX.push(x+i);
+                        kolejneRuchyY.push(y-i);
                         var nazwa="pole["+(x+i)+"]["+(y-i)+"]";
-                        document.getElementById(nazwa).innerHTML="O";
+                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
                         return true;
                     }
                 }
@@ -991,8 +1053,10 @@ function cztery(ruch){
                 }
     }
         wybrane[wspX[najWsp]][wspY[najWsp]]="O";
+                        kolejneRuchyX.push(wspX[najWsp]);
+                        kolejneRuchyY.push(wspY[najWsp]);
             var nazwa="pole["+wspX[najWsp]+"]["+wspY[najWsp]+"]";
-            document.getElementById(nazwa).innerHTML="O";
+            document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
         return true;
                         
 }
@@ -1074,8 +1138,10 @@ function trzyOb(ruch){
                 }
     }
         wybrane[wspX[najWsp]][wspY[najWsp]]="O";
+                        kolejneRuchyX.push(wspX[najWsp]);
+                        kolejneRuchyY.push(wspY[najWsp]);
             var nazwa="pole["+wspX[najWsp]+"]["+wspY[najWsp]+"]";
-            document.getElementById(nazwa).innerHTML="O";
+            document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
         return true;
 }
 
@@ -1255,8 +1321,10 @@ function ustWygUklad(ruch){
             }
             if(ileUkladow>1 && ruch){
                         wybrane[x][y]="O";
+                        kolejneRuchyX.push(x);
+                        kolejneRuchyY.push(y);
                         var nazwa="pole["+x+"]["+y+"]";
-                        document.getElementById(nazwa).innerHTML="O"; 
+                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral"; 
                         return true;
             }
             if(ileUkladow>1 && !ruch){
@@ -1559,8 +1627,10 @@ function blokWygUklad(ruch){
             if(ileUkladow>2 && ruch){
                 console.log(ileUkladow);
                         wybrane[x][y]="O";
+                        kolejneRuchyX.push(x);
+                        kolejneRuchyY.push(y);
                         var nazwa="pole["+x+"]["+y+"]";
-                        document.getElementById(nazwa).innerHTML="O";
+                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
                         return true;
             }
             if(ileUkladow==2 && ruch){
@@ -1587,8 +1657,10 @@ function blokWygUklad(ruch){
                         }
                     }
                         wybrane[wspX[wspNaj]][wspY[wspNaj]]="O";
+                                        kolejneRuchyX.push(wspX[wspNaj]);
+                                        kolejneRuchyY.push(wspY[wspNaj]);
                         var nazwa="pole["+wspX[wspNaj]+"]["+wspY[wspNaj]+"]";
-                        document.getElementById(nazwa).innerHTML="O";
+                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
                         return true;
             }
             if(ileUkladow>1 && !ruch){
@@ -1681,7 +1753,7 @@ function alfaBeta(deep, alfa, beta, znakGracza){
             console.log("WYNIK!!!= "+alfa);
             wybrane[wspX][wspY]="O";
             var nazwa="pole["+(wspX)+"]["+(wspY)+"]";
-            document.getElementById(nazwa).innerHTML="O";
+            document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
             return true;
         }
         else return false;
@@ -1766,8 +1838,10 @@ function trzyWyg(ruch){
                 }
     }
         wybrane[wspX[najWsp]][wspY[najWsp]]="O";
+                                        kolejneRuchyX.push(wspX[najWsp]);
+                                        kolejneRuchyY.push(wspY[najWsp]);
             var nazwa="pole["+wspX[najWsp]+"]["+wspY[najWsp]+"]";
-            document.getElementById(nazwa).innerHTML="O";
+            document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
         return true;
 }
 
@@ -1850,8 +1924,10 @@ function trzy(ruch){
         console.log(i+" "+wspX[i]+" "+wspY[i]+" "+wynik);
     }
         wybrane[wspX[najWsp]][wspY[najWsp]]="O";
+                                        kolejneRuchyX.push(wspX[najWsp]);
+                                        kolejneRuchyY.push(wspY[najWsp]);
             var nazwa="pole["+wspX[najWsp]+"]["+wspY[najWsp]+"]";
-            document.getElementById(nazwa).innerHTML="O";
+            document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
         return true;
 }
 
@@ -1934,8 +2010,10 @@ while(min>=(ilePolPrzeciwnikaMin*10+(4-ilePolPrzeciwnikaMin)) && wspX.length==0)
         console.log(i+" "+wspX[i]+" "+wspY[i]+" "+wynik);
     }
         wybrane[wspX[najWsp]][wspY[najWsp]]="O";
+                                        kolejneRuchyX.push(wspX[najWsp]);
+                                        kolejneRuchyY.push(wspY[najWsp]);
             var nazwa="pole["+wspX[najWsp]+"]["+wspY[najWsp]+"]";
-            document.getElementById(nazwa).innerHTML="O";
+            document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
         return true;
 }
 
@@ -2015,8 +2093,10 @@ function dwaNaj(ruch){
                 }
     }
         wybrane[wspX[najWsp]][wspY[najWsp]]="O";
+                                        kolejneRuchyX.push(wspX[najWsp]);
+                                        kolejneRuchyY.push(wspY[najWsp]);
             var nazwa="pole["+wspX[najWsp]+"]["+wspY[najWsp]+"]";
-            document.getElementById(nazwa).innerHTML="O";
+            document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
         return true;
 }
 
@@ -2095,8 +2175,10 @@ function dwaOk(ruch){
                 }
     }
         wybrane[wspX[najWsp]][wspY[najWsp]]="O";
+                                        kolejneRuchyX.push(wspX[najWsp]);
+                                        kolejneRuchyY.push(wspY[najWsp]);
             var nazwa="pole["+wspX[najWsp]+"]["+wspY[najWsp]+"]";
-            document.getElementById(nazwa).innerHTML="O";
+            document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
         return true;
 }
 
@@ -2121,8 +2203,10 @@ function pierwszyRuch(){
                     
                 }while(x<1 || x>13 || y<1 || y>13 || (x==i && y==j))
                     wybrane[x][y]="O";
+                                        kolejneRuchyX.push(x);
+                                        kolejneRuchyY.push(y);
                                     var nazwa="pole["+(x)+"]["+(y)+"]";
-                                    document.getElementById(nazwa).innerHTML="O";
+                                    document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
                     return true;
                 
             }
@@ -2131,8 +2215,10 @@ function pierwszyRuch(){
         x=Math.floor(Math.random()*7+4);
          y=Math.floor(Math.random()*7+4);
             wybrane[x][y]="O";
+                                        kolejneRuchyX.push(x);
+                                        kolejneRuchyY.push(y);
             var nazwa="pole["+(x)+"]["+(y)+"]";
-            document.getElementById(nazwa).innerHTML="O";
+            document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
         return true;
     
 }
@@ -2156,4 +2242,57 @@ function czyWyg(znak){
         }
     }
     return false;
+}
+
+function cofanie(jakiRuch){
+   if(jakiRuch>0 && aktPokazRuch==kolejneRuchyX.length-1) return;
+    if(jakiRuch<0 && aktPokazRuch==-1) return;
+    var nazwa;
+    if(jakiRuch==-2){
+        aktPokazRuch=-1;
+        for(var i=0; i<15; i++){
+            for(var j=0; j<15; j++){
+                nazwa="pole["+j+"]["+i+"]";
+                document.getElementById(nazwa).innerHTML="";
+                document.getElementById(nazwa).style.backgroundColor="cornflowerblue";
+            }
+        }
+    }
+    if(jakiRuch==-1){
+        console.log(aktPokazRuch+" "+kolejneRuchyX[aktPokazRuch]+" "+kolejneRuchyY[aktPokazRuch]);
+        nazwa=nazwa="pole["+kolejneRuchyX[aktPokazRuch]+"]["+kolejneRuchyY[aktPokazRuch]+"]";
+        document.getElementById(nazwa).innerHTML="";
+         document.getElementById(nazwa).style.backgroundColor="cornflowerblue";
+        aktPokazRuch--;
+    }
+    if(jakiRuch==1){
+        aktPokazRuch++;
+        nazwa=nazwa="pole["+kolejneRuchyX[aktPokazRuch]+"]["+kolejneRuchyY[aktPokazRuch]+"]";
+        if(wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]=="X") document.getElementById(nazwa).innerHTML="X";
+        else{
+                if(wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]=="O") document.getElementById(nazwa).innerHTML="O"; 
+                else {
+                    if(wybrane[kolejneRuchyX[aktPokazRuch]-1][kolejneRuchyY[aktPokazRuch]-1]=="O") document.getElementById(nazwa).innerHTML="X"; 
+                    else  document.getElementById(nazwa).innerHTML="O"; 
+                    document.getElementById(nazwa).style.backgroundColor="green";
+                }
+            }        
+    }
+    if(jakiRuch==2){
+        if(aktPokazRuch==-1) aktPokazRuch=0;
+        for(aktPokazRuch; aktPokazRuch<kolejneRuchyX.length; aktPokazRuch++){
+            nazwa=nazwa="pole["+kolejneRuchyX[aktPokazRuch]+"]["+kolejneRuchyY[aktPokazRuch]+"]";
+            if(wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]=="X") document.getElementById(nazwa).innerHTML="X";
+            else{
+                if(wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]=="O") document.getElementById(nazwa).innerHTML="O"; 
+                else {
+                    if(wybrane[kolejneRuchyX[aktPokazRuch]-1][kolejneRuchyY[aktPokazRuch]-1]=="O") document.getElementById(nazwa).innerHTML="X"; 
+                    else  document.getElementById(nazwa).innerHTML="O"; 
+                    document.getElementById(nazwa).style.backgroundColor="green";
+                }
+            }
+        }
+        aktPokazRuch--;
+    } 
+     document.getElementById("guziczkiKtory").innerHTML=(aktPokazRuch+1)+"/"+kolejneRuchyX.length; 
 }
