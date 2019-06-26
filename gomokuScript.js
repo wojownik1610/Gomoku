@@ -25,8 +25,14 @@ var zaczynajacy="X";
 var kolejneRuchyX = [];
 var kolejneRuchyY = [];
 var aktPokazRuch;
+var cofKopia = [];
+var cofZnak = [];
+for(var i=0; i<15 ;i++){
+    cofKopia[i] = [];
+    cofZnak[i] = [];
+    wybrane[i]=[];
+}
 
-for(var i=0; i<15; i++) wybrane[i]=[];
 for(var i=0; i<15; i++){
     for(var j=0; j<15; j++){
         wybrane[i][j]="P";
@@ -270,6 +276,20 @@ function wygrana(znak){
     document.getElementById("guziczki").style.display="block";
     aktPokazRuch=kolejneRuchyX.length-1;
     document.getElementById("guziczkiKtory").innerHTML=kolejneRuchyX.length+"/"+kolejneRuchyX.length; 
+    for(var i=0; i<15; i++){
+        for(var j=0; j<15; j++){
+            cofKopia[i][j]=wybrane[i][j];
+            if(cofKopia[i][j]=="W"){
+                    if(wygrany=="X"){
+                        cofKopia[i][j]="X";
+                    }
+                    else{
+                         cofKopia[i][j]="O";
+                    }
+             }
+            cofZnak[i][j]="q";
+        }
+    }
     return;
 }
 
@@ -368,438 +388,174 @@ function ruchKomp(x, y){
 }
 
 function piatka(ruch){
-    var ile;
+   var ile;
     var koniecPetli;
+    var ruchIle=0;
+    var wspX = [];
+    var wspY = [];
 /*poziomo*/
-    for(var x=0; x<=10; x++){
-        for(var y=0; y<15; y++){
-            ile=0;
-            koniecPetli=false;
-                if(wybrane[x][y]=="X") continue;
-                if(x-1>=0 && wybrane[x-1][y]=="O") continue;
-                if(x+5<15 && wybrane[x+5][y]=="O") continue;
-            for(var i=0; i<5; i++){
-                switch(wybrane[x+i][y]){
-                    case "O":
-                        ile+=10;
-                        break;
-                    case "P":
-                        ile+=1;
-                        if(ile%10>1) koniecPetli=true;
-                        break;
-                    case "X":
-                        koniecPetli=true;
-                        break;   
-                }
-                if(koniecPetli) break;
-            }
-            if(koniecPetli) continue;
-            if(ile==41 && ruch){
-                for(var i=0; i<5; i++){
-                    if(wybrane[x+i][y]=="P"){
-                        wybrane[x+i][y]="O";
-                        kolejneRuchyX.push(x+i);
-                        kolejneRuchyY.push(y);
-                        var nazwa="pole["+(x+i)+"]["+y+"]";
-                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
-                        sprWyg(x+i, y);
-                    
-                        return true;
-                    }
-                }
-            }
-            if(ile==41 && !ruch){
-                return true;
-            }
-        }
-    }
-/*pionowo*/
     for(var x=0; x<15; x++){
-        for(var y=0; y<=10; y++){
-            ile=0;
-            koniecPetli=false;
+        for(var y=0; y<15; y++){
                 if(wybrane[x][y]=="X") continue;
-                if(y-1>=0 && wybrane[x][y-1]=="O") continue;
-                if(y+5<15 && wybrane[x][y+5]=="O") continue;
-            for(var i=0; i<5; i++){
-                switch(wybrane[x][y+i]){
-                    case "O":
-                        ile+=10;
-                        break;
-                    case "P":
-                        ile+=1;
-                        if(ile%10>1) koniecPetli=true;
-                        break;
-                    case "X":
-                        koniecPetli=true;
-                        break;   
-                }
-                if(koniecPetli) break;
-            }
-            if(koniecPetli) continue;
-            if(ile==41 && ruch){
-                for(var i=0; i<5; i++){
-                    if(wybrane[x][y+i]=="P"){
-                        wybrane[x][y+i]="O";
-                        kolejneRuchyX.push(x);
-                        kolejneRuchyY.push(y+i);
-                        var nazwa="pole["+x+"]["+(y+i)+"]";
-                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
-                      sprWyg(x, y+i);
-                        return true;
+            for(var i=1; i>=0; i--){
+                for(var j=1; j>=-1; j--){
+                    if(i==0 && j==0) break;
+                    if(x+4*i>=15 || y+4*j<0 || y+4*j>=15) continue;
+                    if(x-i>=0 && y-j>=0 && y-j<15 && wybrane[x-i][y-j]=="O") continue;
+                    if(x+5*i<15 && y+5*j>=0 && y+5*j<15 && wybrane[x+5*i][y+5*j]=="O") continue;
+                    ile=0;
+                    koniecPetli=false;
+                    for(var k=0; k<5; k++){
+                        switch(wybrane[x+i*k][y+j*k]){
+                            case "O":
+                                ile+=10;
+                                break;
+                            case "P":
+                                ile+=1;
+                                if(ile%10>1) koniecPetli=true;
+                                break;
+                            case "X":
+                                koniecPetli=true;
+                                break;   
+                        }
+                        if(koniecPetli) break;
+                    }
+                    if(koniecPetli) continue;
+                    if(ile==41 && ruch){
+                        for(var k=0; k<5; k++){
+                            if(wybrane[x+i*k][y+j*k]=="P"){
+                                wspX.push((x+i*k));
+                                wspY.push((y+j*k));
+                            }
+                        }
+                    }
+                    if(ile==41 && !ruch){
+                        ruchIle++;
                     }
                 }
-            }
-            if(ile==41 && !ruch){
-                return true;
-            }
+            }   
         }
     }
-/*skos - backslash*/
-    for(var x=0; x<=10; x++){
-        for(var y=0; y<=10; y++){
-            ile=0;
-            koniecPetli=false;
-                if(wybrane[x][y]=="X") continue;
-                if(y-1>=0 && x-1>=0 && wybrane[x-1][y-1]=="O") continue;
-                if(y+5<15 && x+5<15 && wybrane[x+5][y+5]=="O") continue;
-            for(var i=0; i<5; i++){
-                switch(wybrane[x+i][y+i]){
-                    case "O":
-                        ile+=10;
-                        break;
-                    case "P":
-                        ile+=1;
-                        if(ile%10>1) koniecPetli=true;
-                        break;
-                    case "X":
-                        koniecPetli=true;
-                        break;   
-                }
-                if(koniecPetli) break;
-            }
-            if(koniecPetli) continue;
-           if(ile==41 && ruch){
-                for(var i=0; i<5; i++){
-                    if(wybrane[x+i][y+i]=="P"){
-                        wybrane[x+i][y+i]="O";
-                        kolejneRuchyX.push(x+i);
-                        kolejneRuchyY.push(y+i);
-                        var nazwa="pole["+(x+i)+"]["+(y+i)+"]";
-                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
-                     sprWyg(x+i, y+i);
-                        return true;
+    if(!ruch) return ruchIle;
+    
+    if(wspX.length==0) return false;
+    var najWsp;
+    var najWynik=-1;
+    var wynik;
+    for(var i=0; i<wspX.length; i++){
+        wynik=0;
+        if(wybrane[wspX[i]][wspY[i]]!="P") continue;
+        wybrane[wspX[i]][wspY[i]]="O";
+                    wynik+=trzyWyg(false)*1000;
+                    wynik+=trzy(false)*100;
+                    wynik+=dwaNaj(false)*10;
+                    wynik+=dwaOk(false);
+        wybrane[wspX[i]][wspY[i]]="P";
+                if(najWynik==wynik){
+                    if(Math.floor(Math.random()*2)==1){
+                        najWsp=i;
                     }
                 }
-            }
-            if(ile==41 && !ruch){
-                return true;
-            }
-        }
-    }
-/*skos - slash*/
-    for(var x=0; x<=10; x++){
-        for(var y=4; y<15; y++){
-            ile=0;
-            koniecPetli=false;
-                if(wybrane[x][y]=="X") continue;
-                if(y+1<15 && x-1>=0 && wybrane[x-1][y+1]=="O") continue;
-                if(y-5>=0 && x+5<15 && wybrane[x+5][y-5]=="O") continue;
-            for(var i=0; i<5; i++){
-                switch(wybrane[x+i][y-i]){
-                    case "O":
-                        ile+=10;
-                        break;
-                    case "P":
-                        ile+=1;
-                        if(ile%10>1) koniecPetli=true;
-                        break;
-                    case "X":
-                        koniecPetli=true;
-                        break;   
+                if(najWynik<wynik){
+                    najWynik=wynik;
+                    najWsp=i;
                 }
-                if(koniecPetli) break;
-            }
-            if(koniecPetli) continue;
-            if(ile==41 && ruch){
-                for(var i=0; i<5; i++){
-                    if(wybrane[x+i][y-i]=="P"){
-                        wybrane[x+i][y-i]="O";
-                        kolejneRuchyX.push(x+i);
-                        kolejneRuchyY.push(y-i);
-                        var nazwa="pole["+(x+i)+"]["+(y-i)+"]";
-                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
-                    sprWyg(x+i, y-i);
-                        return true;
-                    }
-                }
-            }
-            if(ile==41 && !ruch){
-                return true;
-            }
-        }
     }
-    return false;
+        wybrane[wspX[najWsp]][wspY[najWsp]]="O";
+                        kolejneRuchyX.push(wspX[najWsp]);
+                        kolejneRuchyY.push(wspY[najWsp]);
+            var nazwa="pole["+wspX[najWsp]+"]["+wspY[najWsp]+"]";
+            document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
+        sprWyg(wspX[najWsp], wspY[najWsp]);
+        return true;
+                        
 }
 
 function czteryOb(ruch){
     var ile;
     var koniecPetli;
     var ruchIle=0;
-/*poziomo*/
-    for(var x=0; x<=10; x++){
-        for(var y=0; y<15; y++){
-            ile=0;
-            koniecPetli=false;
-                if(wybrane[x][y]=="O") continue;
-                if(x-1>=0 && wybrane[x-1][y]=="X") continue;
-                if(x+5<15 && wybrane[x+5][y]=="X") continue;
-            for(var i=0; i<5; i++){
-                switch(wybrane[x+i][y]){
-                    case "X":
-                        ile+=10;
-                        break;
-                    case "P":
-                        ile+=1;
-                        if(ile%10>1) koniecPetli=true;
-                        break;
-                    case "O":
-                        koniecPetli=true;
-                        break;   
-                }
-                if(koniecPetli) break;
-            }
-            if(koniecPetli) continue;
-            if(ile==41 && ruch){
-                var wspX;
-                var wspY;
-                var wynik=0;
-                for(var i=0; i<5; i++){
-                    var wynikAkt;
-                    if(wybrane[x+i][y]=="P"){
-                            wynikAkt=0;
-                        wybrane[x+i][y]="O";
-                            wynikAkt+=trzyWyg(false)*1000;
-                            wynikAkt+=trzy(false)*100;
-                            wynikAkt+=dwaNaj(false)*10;
-                            wynikAkt+=dwaOk(false);
-                        wybrane[x+i][y]="P";
-                        if(wynikAkt>wynik){
-                            wynik=wynikAkt;
-                            wspX=x+i;
-                            wspY=y;
-                        }
-                        if(wynik==wynikAkt){
-                            if(Math.floor(Math.random()*2)==1){
-                                wspX=x+i;
-                                wspY=y;
-                            }
-                        }
-                    }
-                }
-                        wybrane[wspX][wspY]="O";
-                        kolejneRuchyX.push(wspX);
-                        kolejneRuchyY.push(wspY);
-                        var nazwa="pole["+wspX+"]["+wspY+"]";
-                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
-                        return true;
-            }
-            if(ile==41 && !ruch){
-                ruchIle++;
-            }
-        }
-    }
-/*pionowo*/
+    var wspX = [];
+    var wspY = [];
+    
+    
     for(var x=0; x<15; x++){
-        for(var y=0; y<=10; y++){
-            ile=0;
-            koniecPetli=false;
-                if(wybrane[x][y]=="O") continue;
-                if(y-1>=0 && wybrane[x][y-1]=="X") continue;
-                if(y+5<15 && wybrane[x][y+5]=="X") continue;
-            for(var i=0; i<5; i++){
-                switch(wybrane[x][y+i]){
-                    case "X":
-                        ile+=10;
-                        break;
-                    case "P":
-                        ile+=1;
-                        if(ile%10>1) koniecPetli=true;
-                        break;
-                    case "O":
-                        koniecPetli=true;
-                        break;   
-                }
-                if(koniecPetli) break;
-            }
-            if(koniecPetli) continue;
-            if(ile==41 && ruch){
-                var wspX;
-                var wspY;
-                var wynik=0;
-                for(var i=0; i<5; i++){
-                    var wynikAkt;
-                    if(wybrane[x][y+i]=="P"){
-                            wynikAkt=0;
-                        wybrane[x][y+i]="O";
-                            wynikAkt+=trzyWyg(false)*1000;
-                            wynikAkt+=trzy(false)*100;
-                            wynikAkt+=dwaNaj(false)*10;
-                            wynikAkt+=dwaOk(false);
-                        wybrane[x][y+i]="P";
-                        if(wynikAkt>wynik){
-                            wynik=wynikAkt;
-                            wspX=x;
-                            wspY=y+i;
-                        }
-                        if(wynik==wynikAkt){
-                            if(Math.floor(Math.random()*2)==1){
-                                wspX=x;
-                                wspY=y+i;
+        for(var y=0; y<15; y++){
+             if(wybrane[x][y]=="O") continue;
+            for(var i=1; i>=0; i--){
+                for(var j=1; j>=-1; j--){
+                    ile=0;
+                    koniecPetli=false;
+                    if(x+4*i>=15 || y+4*j>=15 || y+4*j<0) continue;
+                    if(i==0 && j==0) break;
+                    if(x-i>=0 && y-j>=0 && y-j<15 && wybrane[x-i][y-j]=="X") continue;
+                    if(x+5*i<15 && y+5*j>=0 && y+5*j<15 && wybrane[x+5*i][y+5*j]=="X") continue;
+                     for(var k=0; k<5; k++){
+                         switch(wybrane[x+k*i][y+k*j]){
+                             case "X":
+                                 ile+=10;
+                                 break;
+                             case "P":
+                                 ile+=1;
+                                 if(ile%10>1) koniecPetli=true;
+                                 break;
+                             case "O":
+                                 koniecPetli=true;
+                                 break;   
+                         }
+                         if(koniecPetli) break;
+                     }
+                        if(koniecPetli) continue;
+                        if(ile==41 && ruch){
+                            for(var k=0; k<5; k++){
+                                if(wybrane[x+i*k][y+j*k]=="P"){
+                                wspX.push((x+i*k));
+                                wspY.push((y+j*k));
+                            }  
                             }
                         }
-                    }
-                }
-                        wybrane[wspX][wspY]="O";
-                        kolejneRuchyX.push(wspX);
-                        kolejneRuchyY.push(wspY);
-                        var nazwa="pole["+wspX+"]["+wspY+"]";
-                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
-                        return true;
-            }
-            if(ile==41 && !ruch){
-                ruchIle++;
-            }
-        }
-    }
-/*skos - backslash*/
-    for(var x=0; x<=10; x++){
-        for(var y=0; y<=10; y++){
-            ile=0;
-            koniecPetli=false;
-                if(wybrane[x][y]=="O") continue;
-                if(y-1>=0 && x-1>=0 && wybrane[x-1][y-1]=="X") continue;
-                if(y+5<15 && x+5<15 && wybrane[x+5][y+5]=="X") continue;
-            for(var i=0; i<5; i++){
-                switch(wybrane[x+i][y+i]){
-                    case "X":
-                        ile+=10;
-                        break;
-                    case "P":
-                        ile+=1;
-                        if(ile%10>1) koniecPetli=true;
-                        break;
-                    case "O":
-                        koniecPetli=true;
-                        break;   
-                }
-                if(koniecPetli) break;
-            }
-            if(koniecPetli) continue;
-            if(ile==41 && ruch){
-                var wspX;
-                var wspY;
-                var wynik=0;
-                for(var i=0; i<5; i++){
-                    var wynikAkt;
-                    if(wybrane[x+i][y+i]=="P"){
-                            wynikAkt=0;
-                        wybrane[x+i][y+i]="O";
-                            wynikAkt+=trzyWyg(false)*1000;
-                            wynikAkt+=trzy(false)*100;
-                            wynikAkt+=dwaNaj(false)*10;
-                            wynikAkt+=dwaOk(false);
-                        wybrane[x+i][y+i]="P";
-                        if(wynikAkt>wynik){
-                            wynik=wynikAkt;
-                            wspX=x+i;
-                            wspY=y+i;
+                        if(ile==41 && !ruch){
+                            ruchIle++;
                         }
-                        if(wynik==wynikAkt){
-                            if(Math.floor(Math.random()*2)==1){
-                                wspX=x+i;
-                                wspY=y+i;
-                            }
-                        }
-                    }
                 }
-                        wybrane[wspX][wspY]="O";
-                        kolejneRuchyX.push(wspX);
-                        kolejneRuchyY.push(wspY);
-                        var nazwa="pole["+wspX+"]["+wspY+"]";
-                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
-                        return true;
+            }  
             }
-            if(ile==41 && !ruch){
-                ruchIle++;
-            }
-        }
-    }
-/*skos - slash*/
-    for(var x=0; x<=10; x++){
-        for(var y=4; y<15; y++){
-            ile=0;
-            koniecPetli=false;
-                if(wybrane[x][y]=="O") continue;
-                if(y+1<15 && x-1>=0 && wybrane[x-1][y+1]=="X") continue;
-                if(y-5>=0 && x+5<15 && wybrane[x+5][y-5]=="X") continue;
-            for(var i=0; i<5; i++){
-                switch(wybrane[x+i][y-i]){
-                    case "X":
-                        ile+=10;
-                        break;
-                    case "P":
-                        ile+=1;
-                        if(ile%10>1) koniecPetli=true;
-                        break;
-                    case "O":
-                        koniecPetli=true;
-                        break;   
-                }
-                if(koniecPetli) break;
-            }
-            if(koniecPetli) continue;
-            if(ile==41 && ruch){
-                var wspX;
-                var wspY;
-                var wynik=0;
-                for(var i=0; i<5; i++){
-                    var wynikAkt;
-                    if(wybrane[x+i][y-i]=="P"){
-                            wynikAkt=0;
-                        wybrane[x+i][y-i]="O";
-                            wynikAkt+=trzyWyg(false)*1000;
-                            wynikAkt+=trzy(false)*100;
-                            wynikAkt+=dwaNaj(false)*10;
-                            wynikAkt+=dwaOk(false);
-                        wybrane[x+i][y-i]="P";
-                        if(wynikAkt>wynik){
-                            wynik=wynikAkt;
-                            wspX=x+i;
-                            wspY=y-i;
-                        }
-                        if(wynik==wynikAkt){
-                            if(Math.floor(Math.random()*2)==1){
-                                wspX=x+i;
-                                wspY=y-i;
-                            }
-                        }
-                    }
-                }
-                        wybrane[wspX][wspY]="O";
-                        kolejneRuchyX.push(wspX);
-                        kolejneRuchyY.push(wspY);
-                        var nazwa="pole["+wspX+"]["+wspY+"]";
-                        document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
-                        return true;
-            }
-            if(ile==41 && !ruch){
-                ruchIle++;
-            }
-        }
     }
     if(!ruch) return ruchIle;
-    return false;
+    
+    if(wspX.length==0) return false;
+    var najWsp;
+    var najWynik=-1;
+    var wynik;
+    for(var i=0; i<wspX.length; i++){
+        wynik=0;
+        if(wybrane[wspX[i]][wspY[i]]!="P") continue;
+        wybrane[wspX[i]][wspY[i]]="O";
+                    wynik+=trzyWyg(false)*1000;
+                    wynik+=trzy(false)*100;
+                    wynik+=dwaNaj(false)*10;
+                    wynik+=dwaOk(false);
+        wybrane[wspX[i]][wspY[i]]="X";
+                     wynik+=czteryOb(false)*1000;
+                     wynik+=trzyOb(false)*1000;
+                     wynik+=blokWygUklad(false)*1000;
+        wybrane[wspX[i]][wspY[i]]="P";
+                if(najWynik==wynik){
+                    if(Math.floor(Math.random()*2)==1){
+                        najWsp=i;
+                    }
+                }
+                if(najWynik<wynik){
+                    najWynik=wynik;
+                    najWsp=i;
+                }
+    }
+        wybrane[wspX[najWsp]][wspY[najWsp]]="O";
+                                        kolejneRuchyX.push(wspX[najWsp]);
+                                        kolejneRuchyY.push(wspY[najWsp]);
+            var nazwa="pole["+wspX[najWsp]+"]["+wspY[najWsp]+"]";
+            document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
+        return true;
 }
 
 function czteryWyg(ruch){
@@ -1041,6 +797,10 @@ function cztery(ruch){
                     wynik+=trzy(false)*100;
                     wynik+=dwaNaj(false)*10;
                     wynik+=dwaOk(false);
+        wybrane[wspX[i]][wspY[i]]="X";
+                     wynik+=czteryOb(false)*1000;
+                     wynik+=trzyOb(false)*1000;
+                     wynik+=blokWygUklad(false)*1000;
         wybrane[wspX[i]][wspY[i]]="P";
                 if(najWynik==wynik){
                     if(Math.floor(Math.random()*2)==1){
@@ -1126,6 +886,10 @@ function trzyOb(ruch){
                     wynik+=trzy(false)*100;
                     wynik+=dwaNaj(false)*10;
                     wynik+=dwaOk(false);
+        wybrane[wspX[i]][wspY[i]]="X";
+                     wynik+=czteryOb(false)*1000;
+                     wynik+=trzyOb(false)*1000;
+                     wynik+=blokWygUklad(false)*1000;
         wybrane[wspX[i]][wspY[i]]="P";
                 if(najWynik==wynik){
                     if(Math.floor(Math.random()*2)==1){
@@ -1645,6 +1409,10 @@ function blokWygUklad(ruch){
                                 wynikAkt+=trzy(false)*100;
                                 wynikAkt+=dwaNaj(false)*10;
                                 wynikAkt+=dwaOk(false);
+                        wybrane[wspX[h]][wspY[h]]="X";
+                            wynik+=czteryOb(false)*1000;
+                            wynik+=trzyOb(false)*1000;
+                            wynik+=blokWygUklad(false)*1000;
                             wybrane[wspX[h]][wspY[h]]="P";
                         if(wynikAkt>wynik){
                             wynik=wynikAkt;
@@ -1826,6 +1594,10 @@ function trzyWyg(ruch){
                     wynik+=trzy(false)*100;
                     wynik+=dwaNaj(false)*10;
                     wynik+=dwaOk(false);
+        wybrane[wspX[i]][wspY[i]]="X";
+                     wynik+=czteryOb(false)*1000;
+                     wynik+=trzyOb(false)*1000;
+                     wynik+=blokWygUklad(false)*1000;
         wybrane[wspX[i]][wspY[i]]="P";
                 if(najWynik==wynik){
                     if(Math.floor(Math.random()*2)==1){
@@ -1911,6 +1683,10 @@ function trzy(ruch){
                     wynik+=trzy(false)*100;
                     wynik+=dwaNaj(false)*10;
                     wynik+=dwaOk(false);
+        wybrane[wspX[i]][wspY[i]]="X";
+                     wynik+=czteryOb(false)*1000;
+                     wynik+=trzyOb(false)*1000;
+                     wynik+=blokWygUklad(false)*1000;
                     wybrane[wspX[i]][wspY[i]]="P";
                 if(najWynik==wynik){
                     if(Math.floor(Math.random()*2)==1){
@@ -1997,6 +1773,10 @@ while(min>=(ilePolPrzeciwnikaMin*10+(4-ilePolPrzeciwnikaMin)) && wspX.length==0)
                     wynik+=trzy(false)*100;
                     wynik+=dwaNaj(false)*10;
                     wynik+=dwaOk(false);
+        wybrane[wspX[i]][wspY[i]]="X";
+                     wynik+=czteryOb(false)*1000;
+                     wynik+=trzyOb(false)*1000;
+                     wynik+=blokWygUklad(false)*1000;
                     wybrane[wspX[i]][wspY[i]]="P";
                 if(najWynik==wynik){
                     if(Math.floor(Math.random()*2)==1){
@@ -2080,7 +1860,11 @@ function dwaNaj(ruch){
                     wynik+=trzyWyg(false)*1000;
                     wynik+=trzy(false)*100;
                     wynik+=dwaNaj(false)*10;
-                    wynik+=dwaOk(false)
+                    wynik+=dwaOk(false);
+        wybrane[wspX[i]][wspY[i]]="X";
+                     wynik+=czteryOb(false)*1000;
+                     wynik+=trzyOb(false)*1000;
+                     wynik+=blokWygUklad(false)*1000;
         wybrane[wspX[i]][wspY[i]]="P";
                 if(najWynik==wynik){
                     if(Math.floor(Math.random()*2)==1){
@@ -2162,7 +1946,11 @@ function dwaOk(ruch){
                     wynik+=trzyWyg(false)*1000;
                     wynik+=trzy(false)*100;
                     wynik+=dwaNaj(false)*10;
-                    wynik+=dwaOk(false)
+                    wynik+=dwaOk(false);
+        wybrane[wspX[i]][wspY[i]]="X";
+                     wynik+=czteryOb(false)*1000;
+                     wynik+=trzyOb(false)*1000;
+                     wynik+=blokWygUklad(false)*1000;
         wybrane[wspX[i]][wspY[i]]="P";
                 if(najWynik==wynik){
                     if(Math.floor(Math.random()*2)==1){
@@ -2248,46 +2036,84 @@ function cofanie(jakiRuch){
    if(jakiRuch>0 && aktPokazRuch==kolejneRuchyX.length-1) return;
     if(jakiRuch<0 && aktPokazRuch==-1) return;
     var nazwa;
+    for(var i=0; i<15; i++){
+            for(var j=0; j<15; j++){
+                nazwa="pole["+i+"]["+j+"]";
+                document.getElementById(nazwa).style.backgroundColor="cornflowerblue";
+                if(wybrane[i][j]=="W"/* && cofKopia[j][i]!="P"*/) document.getElementById(nazwa).style.backgroundColor="green";
+            }
+    }
     if(jakiRuch==-2){
         aktPokazRuch=-1;
         for(var i=0; i<15; i++){
             for(var j=0; j<15; j++){
+                cofKopia[i][j]="P";
+                console.log("-2 "+wybrane[i][j]);
                 nazwa="pole["+j+"]["+i+"]";
                 document.getElementById(nazwa).innerHTML="";
-                document.getElementById(nazwa).style.backgroundColor="cornflowerblue";
             }
         }
     }
     if(jakiRuch==-1){
+        cofKopia[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]="P";
         console.log(aktPokazRuch+" "+kolejneRuchyX[aktPokazRuch]+" "+kolejneRuchyY[aktPokazRuch]);
         nazwa=nazwa="pole["+kolejneRuchyX[aktPokazRuch]+"]["+kolejneRuchyY[aktPokazRuch]+"]";
         document.getElementById(nazwa).innerHTML="";
-         document.getElementById(nazwa).style.backgroundColor="cornflowerblue";
+        if(wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]=="W") document.getElementById(nazwa).style.backgroundColor="green";
+         else document.getElementById(nazwa).style.backgroundColor="cornflowerblue";
         aktPokazRuch--;
     }
     if(jakiRuch==1){
         aktPokazRuch++;
-        nazwa=nazwa="pole["+kolejneRuchyX[aktPokazRuch]+"]["+kolejneRuchyY[aktPokazRuch]+"]";
-        if(wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]=="X") document.getElementById(nazwa).innerHTML="X";
+        nazwa="pole["+kolejneRuchyX[aktPokazRuch]+"]["+kolejneRuchyY[aktPokazRuch]+"]";
+        console.log("1 "+wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]);
+        if(wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]=="X"){
+            document.getElementById(nazwa).innerHTML="X";
+            cofKopia[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]="X";
+        }
         else{
-                if(wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]=="O") document.getElementById(nazwa).innerHTML="O"; 
+                if(wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]=="O"){
+                    document.getElementById(nazwa).innerHTML="O"; 
+                    cofKopia[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]="O";
+                }
                 else {
-                    if(wybrane[kolejneRuchyX[aktPokazRuch]-1][kolejneRuchyY[aktPokazRuch]-1]=="O") document.getElementById(nazwa).innerHTML="X"; 
-                    else  document.getElementById(nazwa).innerHTML="O"; 
+                    console.log("11(-1) "+wybrane[kolejneRuchyX[aktPokazRuch]-1][kolejneRuchyY[aktPokazRuch]-1]);
+                    if(wygrany=="X"){
+                         document.getElementById(nazwa).innerHTML="X"; 
+                        cofKopia[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]="X";
+                    }
+                    else{
+                         document.getElementById(nazwa).innerHTML="O"; 
+                        cofKopia[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]="O";
+                    }
                     document.getElementById(nazwa).style.backgroundColor="green";
                 }
-            }        
+            } 
+        console.log("11 "+wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]);
     }
     if(jakiRuch==2){
         if(aktPokazRuch==-1) aktPokazRuch=0;
         for(aktPokazRuch; aktPokazRuch<kolejneRuchyX.length; aktPokazRuch++){
-            nazwa=nazwa="pole["+kolejneRuchyX[aktPokazRuch]+"]["+kolejneRuchyY[aktPokazRuch]+"]";
-            if(wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]=="X") document.getElementById(nazwa).innerHTML="X";
-            else{
-                if(wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]=="O") document.getElementById(nazwa).innerHTML="O"; 
+           nazwa="pole["+kolejneRuchyX[aktPokazRuch]+"]["+kolejneRuchyY[aktPokazRuch]+"]";
+        if(wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]=="X"){
+            document.getElementById(nazwa).innerHTML="X";
+            cofKopia[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]="X";
+        }
+        else{
+                if(wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]=="O"){
+                    document.getElementById(nazwa).innerHTML="O"; 
+                    cofKopia[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]="O";
+                }
                 else {
-                    if(wybrane[kolejneRuchyX[aktPokazRuch]-1][kolejneRuchyY[aktPokazRuch]-1]=="O") document.getElementById(nazwa).innerHTML="X"; 
-                    else  document.getElementById(nazwa).innerHTML="O"; 
+                    console.log("11(-1) "+wybrane[kolejneRuchyX[aktPokazRuch]-1][kolejneRuchyY[aktPokazRuch]-1]);
+                    if(wygrany=="X"){
+                         document.getElementById(nazwa).innerHTML="X"; 
+                        cofKopia[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]="X";
+                    }
+                    else{
+                         document.getElementById(nazwa).innerHTML="O"; 
+                        cofKopia[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]="O";
+                    }
                     document.getElementById(nazwa).style.backgroundColor="green";
                 }
             }
@@ -2295,4 +2121,1101 @@ function cofanie(jakiRuch){
         aktPokazRuch--;
     } 
      document.getElementById("guziczkiKtory").innerHTML=(aktPokazRuch+1)+"/"+kolejneRuchyX.length; 
+    cofanieCzteryOb();
+    cofanieTrzyOb();
+    cofanieCztery();
+    cofaniepPiatka();
+    cofanieBlokWygUklad();
+    cofanieAtakkWygUklad()
 }
+
+function cofanieCzteryOb(){
+    var ile;
+    var koniecPetli;
+    var ruchIle=0;
+    var wspX = [];
+    var wspY = [];
+    
+    
+    for(var x=0; x<15; x++){
+        for(var y=0; y<15; y++){
+             if(cofKopia[x][y]=="O") continue;
+            for(var i=1; i>=0; i--){
+                for(var j=1; j>=-1; j--){
+                    ile=0;
+                    koniecPetli=false;
+                    if(x+4*i>=15 || y+4*j>=15 || y+4*j<0) continue;
+                    if(i==0 && j==0) break;
+                    if(x-i>=0 && y-j>=0 && y-j<15 && cofKopia[x-i][y-j]=="X") continue;
+                    if(x+5*i<15 && y+5*j>=0 && y+5*j<15 && cofKopia[x+5*i][y+5*j]=="X") continue;
+                     for(var k=0; k<5; k++){
+                         switch(cofKopia[x+k*i][y+k*j]){
+                             case "X":
+                                 ile+=10;
+                                 break;
+                             case "P":
+                                 ile+=1;
+                                 if(ile%10>1) koniecPetli=true;
+                                 break;
+                             case "O":
+                                 koniecPetli=true;
+                                 break;   
+                         }
+                         if(koniecPetli) break;
+                     }
+                        if(koniecPetli) continue;
+                        if(ile==41){
+                            for(var k=0; k<5; k++){
+                                if(cofKopia[x+i*k][y+j*k]=="X"){
+                                     var nazwa="pole["+(x+i*k)+"]["+(y+j*k)+"]";
+                                    document.getElementById(nazwa).style.backgroundColor="yellow";
+                                wspX.push((x+i*k));
+                                wspY.push((y+j*k));
+                            }  
+                            }
+                        }
+                }
+            }  
+            }
+    } 
+    if(wspX.length==0) return false;
+        return true;
+}
+
+function cofanieTrzyOb(){
+    var ile;
+    var koniecPetli;
+    var ruchIle=0;
+    var wspX = [];
+    var wspY = [];
+    
+    for(var x=0; x<15; x++){
+        for(var y=0; y<15; y++){
+            if(cofKopia[x][y]!="P") continue;
+            
+            for(var i=1; i>=0; i--){
+                for(var j=1; j>=-1; j--){
+                    if(i==0 && j==0) break;
+                    if(x+5*i>=15 || y+5*j<0 || y+5*j>=15) continue;
+                    if(cofKopia[x+5*i][y+5*j]!="P") continue;
+                    if(x-i>=0 && y-j>=0 &&y-j<15 && cofKopia[x-i][y-j]=="X") continue;
+                    if(x+6*i<15 && y+6*j>=0 &&y+6*j<15 && cofKopia[x+6*i][y+6*j]=="X") continue;
+                    ile=0;
+                    koniecPetli=false;
+                    for(var k=1; k<5; k++){
+                        switch(cofKopia[x+i*k][y+j*k]){
+                            case "X":
+                                ile+=10;
+                                break;
+                            case "P":
+                                ile+=1;
+                                if(ile%10>1) koniecPetli=true;
+                                break;
+                            case "O":
+                                koniecPetli=true;
+                                break;   
+                        }
+                        if(koniecPetli) break;
+                    }
+                    if(koniecPetli) continue;
+                    if(ile==31){
+                        for(var k=1; k<5; k++){
+                            if(cofKopia[x+i*k][y+j*k]=="X"){
+                                 var nazwa="pole["+(x+i*k)+"]["+(y+j*k)+"]";
+                                    document.getElementById(nazwa).style.backgroundColor="yellow";
+                                wspX.push((x+i*k));
+                                wspY.push((y+j*k));
+                            }
+                        }
+                    }
+                }
+            }   
+        }
+    }
+    
+    if(wspX.length==0) return false;
+        return true;
+}
+
+function cofanieCztery(){
+    var ile;
+    var koniecPetli;
+    var ruchIle=0;
+    var wspX = [];
+    var wspY = [];
+/*poziomo*/
+    for(var x=0; x<15; x++){
+        for(var y=0; y<15; y++){
+            
+            
+                if(cofKopia[x][y]!="P") continue;
+            for(var i=1; i>=0; i--){
+                for(var j=1; j>=-1; j--){
+                    if(i==0 && j==0) break;
+                    if(x+5*i>=15 || y+5*j<0 || y+5*j>=15 || cofKopia[x+5*i][y+5*j]!="P") continue;
+                    if(x-i>=0 && y-j>=0 && y-j<15 && cofKopia[x-i][y-j]=="O") continue;
+                    if(x+6*i<15 && y+6*j>=0 && y+6*j<15 && cofKopia[x+6*i][y+6*j]=="O") continue;
+                    ile=0;
+                    koniecPetli=false;
+                    for(var k=1; k<5; k++){
+                        switch(cofKopia[x+i*k][y+j*k]){
+                            case "O":
+                                ile+=10;
+                                break;
+                            case "P":
+                                ile+=1;
+                                if(ile%10>1) koniecPetli=true;
+                                break;
+                            case "X":
+                                koniecPetli=true;
+                                break;   
+                        }
+                        if(koniecPetli) break;
+                    }
+                    if(koniecPetli) continue;
+                    if(ile==31){
+                        for(var k=1; k<5; k++){
+                            if(cofKopia[x+i*k][y+j*k]=="O"){
+                                    var nazwa="pole["+(x+i*k)+"]["+(y+j*k)+"]";
+                                    document.getElementById(nazwa).style.backgroundColor="pink";
+                                wspX.push((x+i*k));
+                                wspY.push((y+j*k));
+                            }
+                        }
+                    }
+                }
+            }   
+        }
+    }
+    if(wspX.length==0) return false;
+        return true;
+                        
+}
+
+function cofaniepPiatka(){
+   var ile;
+    var koniecPetli;
+    var ruchIle=0;
+    var wspX = [];
+    var wspY = [];
+/*poziomo*/
+    for(var x=0; x<15; x++){
+        for(var y=0; y<15; y++){
+                if(cofKopia[x][y]=="X") continue;
+            for(var i=1; i>=0; i--){
+                for(var j=1; j>=-1; j--){
+                    if(i==0 && j==0) break;
+                    if(x+4*i>=15 || y+4*j<0 || y+4*j>=15) continue;
+                    if(x-i>=0 && y-j>=0 && y-j<15 && cofKopia[x-i][y-j]=="O") continue;
+                    if(x+5*i<15 && y+5*j>=0 && y+5*j<15 && cofKopia[x+5*i][y+5*j]=="O") continue;
+                    ile=0;
+                    koniecPetli=false;
+                    for(var k=0; k<5; k++){
+                        switch(cofKopia[x+i*k][y+j*k]){
+                            case "O":
+                                ile+=10;
+                                break;
+                            case "P":
+                                ile+=1;
+                                if(ile%10>1) koniecPetli=true;
+                                break;
+                            case "X":
+                                koniecPetli=true;
+                                break;   
+                        }
+                        if(koniecPetli) break;
+                    }
+                    if(koniecPetli) continue;
+                    if(ile==41){
+                        for(var k=0; k<5; k++){
+                            if(cofKopia[x+i*k][y+j*k]=="O"){
+                                 var nazwa="pole["+(x+i*k)+"]["+(y+j*k)+"]";
+                                    document.getElementById(nazwa).style.backgroundColor="pink";
+                                wspX.push((x+i*k));
+                                wspY.push((y+j*k));
+                            }
+                        }
+                    }
+                }
+            }   
+        }
+    }
+    if(wspX.length==0) return false;
+        return true;
+                        
+}
+
+function cofanieBlokWygUklad(){
+    var ileUkladow;
+    var ruchIle=0;
+    for(var x=0; x<15; x++){
+        for(var y=0; y<15; y++){
+            ileUkladow=0;
+            if(cofKopia[x][y]!="P") continue;
+                    var wspX = [];
+                    var wspY = [];
+            for(var i=1; i>=0; i--){
+                for(var j=1; j>=-1; j--){
+                    if(i==0 && j==0) break;
+                    
+                    // O X_XXP N
+                        if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || cofKopia[x-2*i][y-2*j]=="O") && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || cofKopia[x+4*i][y+4*j]!="X") && cofKopia[x-i][y-j]=="X" && cofKopia[x+i][y+j]=="X" && cofKopia[x+2*i][y+2*j]=="X" && cofKopia[x+3*i][y+3*j]=="P"){
+                            var nazwa
+                            for(var h=-1; h<=3; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++; continue;
+                        }
+                    // O X_XPX N
+                        if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || cofKopia[x-2*i][y-2*j]=="O") && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || cofKopia[x+4*i][y+4*j]!="X") && cofKopia[x-i][y-j]=="X" && cofKopia[x+i][y+j]=="X" && cofKopia[x+2*i][y+2*j]=="P" && cofKopia[x+3*i][y+3*j]=="X"){
+                            var nazwa
+                            for(var h=-1; h<=3; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++; continue;
+                        }
+                    // O X_PXX N
+                        if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || cofKopia[x-2*i][y-2*j]=="O") && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || cofKopia[x+4*i][y+4*j]!="X") && cofKopia[x-i][y-j]=="X" && cofKopia[x+i][y+j]=="P" && cofKopia[x+2*i][y+2*j]=="X" && cofKopia[x+3*i][y+3*j]=="X"){
+                            var nazwa
+                            for(var h=-1; h<=3; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++; continue;
+                        }
+                    
+                    // O XX_XP N
+                        if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || cofKopia[x-3*i][y-3*j]=="O") && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || cofKopia[x+3*i][y+3*j]!="X") && cofKopia[x-2*i][y-2*j]=="X" && cofKopia[x-i][y-j]=="X" && cofKopia[x+i][y+j]=="X" && cofKopia[x+2*i][y+2*j]=="P") {
+                            var nazwa
+                            for(var h=-2; h<=2; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++; continue;
+                        }
+                    // O XX_PX N
+                        if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || cofKopia[x-3*i][y-3*j]=="O") && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || cofKopia[x+3*i][y+3*j]!="X") && cofKopia[x-2*i][y-2*j]=="X" && cofKopia[x-i][y-j]=="X" && cofKopia[x+i][y+j]=="P" && cofKopia[x+2*i][y+2*j]=="X") {
+                            var nazwa
+                            for(var h=-2; h<=2; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++; continue;
+                        }
+                    // O XP_XX N
+                        if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || cofKopia[x-3*i][y-3*j]=="O") && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || cofKopia[x+3*i][y+3*j]!="X") && cofKopia[x-2*i][y-2*j]=="X" && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="X" && cofKopia[x+2*i][y+2*j]=="X"){
+                            var nazwa
+                            for(var h=-2; h<=2; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    
+                    // O XXX_P N
+                        if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || cofKopia[x-4*i][y-4*j]=="O") && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || cofKopia[x+2*i][y+2*j]!="X") && cofKopia[x-3*i][y-3*j]=="X" && cofKopia[x-2*i][y-2*j]=="X" && cofKopia[x-i][y-j]=="X" && cofKopia[x+i][y+j]=="P"){
+                            var nazwa
+                            for(var h=-3; h<=1; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    // O XXP_X N
+                        if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || cofKopia[x-4*i][y-4*j]=="O") && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || cofKopia[x+2*i][y+2*j]!="X") && cofKopia[x-3*i][y-3*j]=="X" && cofKopia[x-2*i][y-2*j]=="X" && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="X"){
+                            var nazwa
+                            for(var h=-3; h<=1; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    // O XPX_X N
+                        if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || cofKopia[x-4*i][y-4*j]=="O") && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || cofKopia[x+2*i][y+2*j]!="X") && cofKopia[x-3*i][y-3*j]=="X" && cofKopia[x-2*i][y-2*j]=="P" && cofKopia[x-i][y-j]=="X" && cofKopia[x+i][y+j]=="X"){
+                            var nazwa
+                            for(var h=-3; h<=1; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++;continue;
+                        }
+                    
+                    // O XXXP_ N
+                        if(x-4*i>=0 && y-4*j>=0 && y-4*j<15 && (x-5*i<0 || y-5*j<0 || y-5*j>=15 || cofKopia[x-5*i][y-5*j]=="O") && (x+i>=15 || y+j<0 || y+j>=15 || cofKopia[x+i][y+j]!="X") && cofKopia[x-4*i][y-4*j]=="X" && cofKopia[x-3*i][y-3*j]=="X" && cofKopia[x-2*i][y-2*j]=="X" && cofKopia[x-i][y-j]=="P"){
+                            var nazwa
+                            for(var h=-4; h<=0; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    // O XXPX_ N
+                        if(x-4*i>=0 && y-4*j>=0 && y-4*j<15 && (x-5*i<0 || y-5*j<0 || y-5*j>=15 || cofKopia[x-5*i][y-5*j]=="O") && (x+i>=15 || y+j<0 || y+j>=15 || cofKopia[x+i][y+j]!="X") && cofKopia[x-4*i][y-4*j]=="X" && cofKopia[x-3*i][y-3*j]=="X" && cofKopia[x-2*i][y-2*j]=="P" && cofKopia[x-i][y-j]=="X"){
+                            var nazwa
+                            for(var h=-4; h<=0; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++;continue;
+                        }
+                    // O XPXX_ N
+                        if(x-4*i>=0 && y-4*j>=0 && y-4*j<15 && (x-5*i<0 || y-5*j<0 || y-5*j>=15 || cofKopia[x-5*i][y-5*j]=="O") && (x+i>=15 || y+j<0 || y+j>=15 || cofKopia[x+i][y+j]!="X") && cofKopia[x-4*i][y-4*j]=="X" && cofKopia[x-3*i][y-3*j]=="P" && cofKopia[x-2*i][y-2*j]=="X" && cofKopia[x-i][y-j]=="X"){
+                            var nazwa
+                            for(var h=-4; h<=0; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++;continue;
+                        }
+                    
+                    
+                    // N _PXXX O
+                         if(x+4*i<15 && y+4*j>=0 && y+4*j<15 && (x+5*i>=15 || y+5*j<0 || y+5*j>=15 || cofKopia[x+5*i][y+5*j]=="O") && (x-i<0 || y-j<0 || y-j>=15 || cofKopia[x-i][y-j]!="X") && cofKopia[x+4*i][y+4*j]=="X" && cofKopia[x+3*i][y+3*j]=="X" && cofKopia[x+2*i][y+2*j]=="X" && cofKopia[x+i][y+j]=="P"){
+                            var nazwa
+                            for(var h=0; h<=4; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    // N _XPXX O
+                         if(x+4*i<15 && y+4*j>=0 && y+4*j<15 && (x+5*i>=15 || y+5*j<0 || y+5*j>=15 || cofKopia[x+5*i][y+5*j]=="O") && (x-i<0 || y-j<0 || y-j>=15 || cofKopia[x-i][y-j]!="X") && cofKopia[x+4*i][y+4*j]=="X" && cofKopia[x+3*i][y+3*j]=="X" && cofKopia[x+2*i][y+2*j]=="P" && cofKopia[x+i][y+j]=="X") {
+                            var nazwa
+                            for(var h=0; h<=4; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++;continue;
+                        }
+                    // N _XXPX O
+                         if(x+4*i<15 && y+4*j>=0 && y+4*j<15 && (x+5*i>=15 || y+5*j<0 || y+5*j>=15 || cofKopia[x+5*i][y+5*j]=="O") && (x-i<0 || y-j<0 || y-j>=15 || cofKopia[x-i][y-j]!="X") && cofKopia[x+4*i][y+4*j]=="X" && cofKopia[x+3*i][y+3*j]=="P" && cofKopia[x+2*i][y+2*j]=="X" && cofKopia[x+i][y+j]=="X") {
+                            var nazwa
+                            for(var h=0; h<=4; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++;continue;
+                        }
+                    
+                    //N P_XXX O
+                        if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || cofKopia[x+4*i][y+4*j]=="O") && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || cofKopia[x-2*i][y-2*j]!="X") && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="X" && cofKopia[x+2*i][y+2*j]=="X" &&  cofKopia[x+3*i][y+3*j]=="X"){
+                            var nazwa
+                            for(var h=-1; h<=3; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    //N X_PXX O
+                        if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || cofKopia[x+4*i][y+4*j]=="O") && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || cofKopia[x-2*i][y-2*j]!="X") && cofKopia[x-i][y-j]=="X" && cofKopia[x+i][y+j]=="P" && cofKopia[x+2*i][y+2*j]=="X" &&  cofKopia[x+3*i][y+3*j]=="X"){
+                            var nazwa
+                            for(var h=-1; h<=3; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    //N X_XPX O
+                        if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || cofKopia[x+4*i][y+4*j]=="O") && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || cofKopia[x-2*i][y-2*j]!="X") && cofKopia[x-i][y-j]=="X" && cofKopia[x+i][y+j]=="X" && cofKopia[x+2*i][y+2*j]=="P" &&  cofKopia[x+3*i][y+3*j]=="X"){
+                            var nazwa
+                            for(var h=-1; h<=3; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++;continue;
+                        }
+                    
+                    // N PX_XX O
+                        if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || cofKopia[x+3*i][y+3*j]=="O") && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || cofKopia[x-3*i][y-3*j]!="X") && cofKopia[x-2*i][y-2*j]=="P" && cofKopia[x-i][y-j]=="X" && cofKopia[x+i][y+j]=="X" &&  cofKopia[x+2*i][y+2*j]=="X"){
+                            var nazwa
+                            for(var h=-2; h<=2; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++;continue;
+                        }
+                    // N XP_XX O
+                        if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || cofKopia[x+3*i][y+3*j]=="O") && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || cofKopia[x-3*i][y-3*j]!="X") && cofKopia[x-2*i][y-2*j]=="X" && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="X" &&  cofKopia[x+2*i][y+2*j]=="X"){
+                            var nazwa
+                            for(var h=-2; h<=2; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    // N XX_PX O
+                        if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || cofKopia[x+3*i][y+3*j]=="O") && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || cofKopia[x-3*i][y-3*j]!="X") && cofKopia[x-2*i][y-2*j]=="X" && cofKopia[x-i][y-j]=="X" && cofKopia[x+i][y+j]=="P" &&  cofKopia[x+2*i][y+2*j]=="X"){
+                            var nazwa
+                            for(var h=-2; h<=2; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    
+                    // N PXX_X O
+                        if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || cofKopia[x+2*i][y+2*j]=="O") && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || cofKopia[x-4*i][y-4*j]!="X") && cofKopia[x-3*i][y-3*j]=="P" && cofKopia[x-2*i][y-2*j]=="X" && cofKopia[x-i][y-j]=="X" &&  cofKopia[x+i][y+j]=="X"){
+                            var nazwa
+                            for(var h=-3; h<=1; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++;continue;
+                        }
+                    // N XPX_X O
+                        if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || cofKopia[x+2*i][y+2*j]=="O") && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || cofKopia[x-4*i][y-4*j]!="X") && cofKopia[x-3*i][y-3*j]=="X" && cofKopia[x-2*i][y-2*j]=="P" && cofKopia[x-i][y-j]=="X" &&  cofKopia[x+i][y+j]=="X"){
+                            var nazwa
+                            for(var h=-3; h<=1; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++;continue;
+                        }
+                    // N XXP_X O
+                        if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || cofKopia[x+2*i][y+2*j]=="O") && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || cofKopia[x-4*i][y-4*j]!="X") && cofKopia[x-3*i][y-3*j]=="X" && cofKopia[x-2*i][y-2*j]=="X" && cofKopia[x-i][y-j]=="P" &&  cofKopia[x+i][y+j]=="X"){
+                            var nazwa
+                            for(var h=-3; h<=1; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    
+                    
+                    
+                    // NP _XXP PN
+                        if(x-i>=0 && x+4*i<15 && y-j>=0 && y-j<15 && y+4*j>=0 && y+4*j<15 && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || cofKopia[x-2*i][y-2*j]!="X") && (x+5*i>=15 || y+5*j<0 || y+5*j>=15 || cofKopia[x+5*i][y+5*j]!="X") && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="X" && cofKopia[x+2*i][y+2*j]=="X" && cofKopia[x+3*i][y+3*j]=="P" && cofKopia[x+4*i][y+4*j]=="P"){ 
+                            var nazwa
+                            for(var h=0; h<=3; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                                                                    ileUkladow++;continue;
+                        }
+                    // NP _XPX PN
+                        if(x-i>=0 && x+4*i<15 && y-j>=0 && y-j<15 && y+4*j>=0 && y+4*j<15 && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || cofKopia[x-2*i][y-2*j]!="X") && (x+5*i>=15 || y+5*j<0 || y+5*j>=15 || cofKopia[x+5*i][y+5*j]!="X") && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="X" && cofKopia[x+2*i][y+2*j]=="P" && cofKopia[x+3*i][y+3*j]=="X" && cofKopia[x+4*i][y+4*j]=="P"){ 
+                            var nazwa
+                            for(var h=0; h<=3; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                                                                    ileUkladow++;continue;
+                        }
+                    // NP _PXX PN
+                        if(x-i>=0 && x+4*i<15 && y-j>=0 && y-j<15 && y+4*j>=0 && y+4*j<15 && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || cofKopia[x-2*i][y-2*j]!="X") && (x+5*i>=15 || y+5*j<0 || y+5*j>=15 || cofKopia[x+5*i][y+5*j]!="X") && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="P" && cofKopia[x+2*i][y+2*j]=="X" && cofKopia[x+3*i][y+3*j]=="X" && cofKopia[x+4*i][y+4*j]=="P"){ 
+                            var nazwa
+                            for(var h=0; h<=3; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                ileUkladow++;continue;
+                        }
+                    
+                    // NP X_XP PN
+                        if(x-2*i>=0 && x+3*i<15 && y-2*j>=0 && y-2*j<15 && y+3*j>=0 && y+3*j<15 && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || cofKopia[x-3*i][y-3*j]!="X") && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || cofKopia[x+4*i][y+4*j]!="X") && cofKopia[x-2*i][y-2*j]=="P" && cofKopia[x-i][y-j]=="X" && cofKopia[x+i][y+j]=="X" && cofKopia[x+2*i][y+2*j]=="P" && cofKopia[x+3*i][y+3*j]=="P"){ 
+                            var nazwa
+                            for(var h=-1; h<=2; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                                                                        ileUkladow++;continue;
+                        }
+                    // NP X_PX PN
+                        if(x-2*i>=0 && x+3*i<15 && y-2*j>=0 && y-2*j<15 && y+3*j>=0 && y+3*j<15 && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || cofKopia[x-3*i][y-3*j]!="X") && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || cofKopia[x+4*i][y+4*j]!="X") && cofKopia[x-2*i][y-2*j]=="P" && cofKopia[x-i][y-j]=="X" && cofKopia[x+i][y+j]=="P" && cofKopia[x+2*i][y+2*j]=="X" && cofKopia[x+3*i][y+3*j]=="P"){ 
+                            var nazwa
+                            for(var h=-1; h<=2; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                ileUkladow++;continue;
+                        }
+                    // NP P_XX PN
+                        if(x-2*i>=0 && x+3*i<15 && y-2*j>=0 && y-2*j<15 && y+3*j>=0 && y+3*j<15 && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || cofKopia[x-3*i][y-3*j]!="X") && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || cofKopia[x+4*i][y+4*j]!="X") && cofKopia[x-2*i][y-2*j]=="P" && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="X" && cofKopia[x+2*i][y+2*j]=="X" && cofKopia[x+3*i][y+3*j]=="P"){ 
+                            var nazwa
+                            for(var h=-1; h<=2; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                ileUkladow++;continue;
+                        }
+                    
+                    // NP XX_P PN
+                        if(x-3*i>=0 && x+2*i<15 && y-3*j>=0 && y-3*j<15 && y+2*j>=0 && y+2*j<15 && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || cofKopia[x-4*i][y-4*j]!="X") && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || cofKopia[x+3*i][y+3*j]!="X") && cofKopia[x-3*i][y-3*j]=="P" && cofKopia[x-2*i][y-2*j]=="X" && cofKopia[x-i][y-j]=="X" && cofKopia[x+i][y+j]=="P" && cofKopia[x+2*i][y+2*j]=="P"){ 
+                            var nazwa
+                            for(var h=-2; h<=1; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                ileUkladow++;continue;
+                        }
+                    // NP XP_X PN
+                        if(x-3*i>=0 && x+2*i<15 && y-3*j>=0 && y-3*j<15 && y+2*j>=0 && y+2*j<15 && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || cofKopia[x-4*i][y-4*j]!="X") && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || cofKopia[x+3*i][y+3*j]!="X") && cofKopia[x-3*i][y-3*j]=="P" && cofKopia[x-2*i][y-2*j]=="X" && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="X" && cofKopia[x+2*i][y+2*j]=="P"){ 
+                            var nazwa
+                            for(var h=-2; h<=1; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                                                                    ileUkladow++;continue;
+                        }
+                    // NP PX_X PN
+                        if(x-3*i>=0 && x+2*i<15 && y-3*j>=0 && y-3*j<15 && y+2*j>=0 && y+2*j<15 && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || cofKopia[x-4*i][y-4*j]!="X") && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || cofKopia[x+3*i][y+3*j]!="X") && cofKopia[x-3*i][y-3*j]=="P" && cofKopia[x-2*i][y-2*j]=="P" && cofKopia[x-i][y-j]=="X" && cofKopia[x+i][y+j]=="X" && cofKopia[x+2*i][y+2*j]=="P"){ 
+                            var nazwa
+                            for(var h=-2; h<=1; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                                                                        ileUkladow++;continue;
+                        }
+                    
+                    // NP XXP_ PN
+                        if(x-4*i>=0 && x+i<15 && y-4*j>=0 && y-4*j<15 && y+j>=0 && y+j<15 && (x-5*i<0 || y-5*j<0 || y-5*j>=15 || cofKopia[x-5*i][y-5*j]!="X") && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || cofKopia[x+2*i][y+2*j]!="X") && cofKopia[x-4*i][y-4*j]=="P" && cofKopia[x-3*i][y-3*j]=="X" && cofKopia[x-2*i][y-2*j]=="X" && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="P"){ 
+                            var nazwa
+                            for(var h=-3; h<=0; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                ileUkladow++;continue;
+                        }
+                    // NP XPX_ PN
+                        if(x-4*i>=0 && x+i<15 && y-4*j>=0 && y-4*j<15 && y+j>=0 && y+j<15 && (x-5*i<0 || y-5*j<0 || y-5*j>=15 || cofKopia[x-5*i][y-5*j]!="X") && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || cofKopia[x+2*i][y+2*j]!="X") && cofKopia[x-4*i][y-4*j]=="P" && cofKopia[x-3*i][y-3*j]=="X" && cofKopia[x-2*i][y-2*j]=="P" && cofKopia[x-i][y-j]=="X" && cofKopia[x+i][y+j]=="P"){ 
+                            var nazwa
+                            for(var h=-3; h<=0; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                                                                    ileUkladow++;continue;
+                        }
+                    // NP PXX_ PN
+                        if(x-4*i>=0 && x+i<15 && y-4*j>=0 && y-4*j<15 && y+j>=0 && y+j<15 && (x-5*i<0 || y-5*j<0 || y-5*j>=15 || cofKopia[x-5*i][y-5*j]!="X") && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || cofKopia[x+2*i][y+2*j]!="X") && cofKopia[x-4*i][y-4*j]=="P" && cofKopia[x-3*i][y-3*j]=="P" && cofKopia[x-2*i][y-2*j]=="X" && cofKopia[x-i][y-j]=="X" && cofKopia[x+i][y+j]=="P"){ 
+                            var nazwa
+                            for(var h=-3; h<=0; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="X"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                                                                    ileUkladow++;continue;
+                        }
+                }
+            }
+            if(ileUkladow>1){
+                var nazwa;
+                for(var i=0; i<wspX.length; i++){
+                    nazwa="pole["+(wspX[i])+"]["+(wspY[i])+"]";
+                    document.getElementById(nazwa).style.backgroundColor="yellow";
+                }
+            }
+        }
+    }
+    return true;
+}
+
+function cofanieAtakkWygUklad(){
+    var ileUkladow;
+    var ruchIle=0;
+    for(var x=0; x<15; x++){
+        for(var y=0; y<15; y++){
+            ileUkladow=0;
+            if(cofKopia[x][y]!="P") continue;
+                    var wspX = [];
+                    var wspY = [];
+            for(var i=1; i>=0; i--){
+                for(var j=1; j>=-1; j--){
+                    if(i==0 && j==0) break;
+                    
+                    // O X_XXP N
+                        if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || cofKopia[x-2*i][y-2*j]=="X") && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || cofKopia[x+4*i][y+4*j]!="O") && cofKopia[x-i][y-j]=="O" && cofKopia[x+i][y+j]=="O" && cofKopia[x+2*i][y+2*j]=="O" && cofKopia[x+3*i][y+3*j]=="P"){
+                            var nazwa
+                            for(var h=-1; h<=3; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++; continue;
+                        }
+                    // O X_XPX N
+                        if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || cofKopia[x-2*i][y-2*j]=="X") && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || cofKopia[x+4*i][y+4*j]!="O") && cofKopia[x-i][y-j]=="O" && cofKopia[x+i][y+j]=="O" && cofKopia[x+2*i][y+2*j]=="P" && cofKopia[x+3*i][y+3*j]=="O"){
+                            var nazwa
+                            for(var h=-1; h<=3; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++; continue;
+                        }
+                    // O X_PXX N
+                        if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || cofKopia[x-2*i][y-2*j]=="X") && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || cofKopia[x+4*i][y+4*j]!="O") && cofKopia[x-i][y-j]=="O" && cofKopia[x+i][y+j]=="P" && cofKopia[x+2*i][y+2*j]=="O" && cofKopia[x+3*i][y+3*j]=="O"){
+                            var nazwa
+                            for(var h=-1; h<=3; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++; continue;
+                        }
+                    
+                    // O XX_XP N
+                        if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || cofKopia[x-3*i][y-3*j]=="X") && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || cofKopia[x+3*i][y+3*j]!="O") && cofKopia[x-2*i][y-2*j]=="O" && cofKopia[x-i][y-j]=="O" && cofKopia[x+i][y+j]=="O" && cofKopia[x+2*i][y+2*j]=="P") {
+                            var nazwa
+                            for(var h=-2; h<=2; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++; continue;
+                        }
+                    // O XX_PX N
+                        if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || cofKopia[x-3*i][y-3*j]=="X") && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || cofKopia[x+3*i][y+3*j]!="O") && cofKopia[x-2*i][y-2*j]=="O" && cofKopia[x-i][y-j]=="O" && cofKopia[x+i][y+j]=="P" && cofKopia[x+2*i][y+2*j]=="O") {
+                            var nazwa
+                            for(var h=-2; h<=2; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++; continue;
+                        }
+                    // O XP_XX N
+                        if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || cofKopia[x-3*i][y-3*j]=="X") && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || cofKopia[x+3*i][y+3*j]!="O") && cofKopia[x-2*i][y-2*j]=="O" && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="O" && cofKopia[x+2*i][y+2*j]=="O"){
+                            var nazwa
+                            for(var h=-2; h<=2; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    
+                    // O XXX_P N
+                        if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || cofKopia[x-4*i][y-4*j]=="X") && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || cofKopia[x+2*i][y+2*j]!="O") && cofKopia[x-3*i][y-3*j]=="O" && cofKopia[x-2*i][y-2*j]=="O" && cofKopia[x-i][y-j]=="O" && cofKopia[x+i][y+j]=="P"){
+                            var nazwa
+                            for(var h=-3; h<=1; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    // O XXP_X N
+                        if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || cofKopia[x-4*i][y-4*j]=="X") && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || cofKopia[x+2*i][y+2*j]!="O") && cofKopia[x-3*i][y-3*j]=="O" && cofKopia[x-2*i][y-2*j]=="O" && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="O"){
+                            var nazwa
+                            for(var h=-3; h<=1; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    // O XPX_X N
+                        if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || cofKopia[x-4*i][y-4*j]=="X") && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || cofKopia[x+2*i][y+2*j]!="O") && cofKopia[x-3*i][y-3*j]=="O" && cofKopia[x-2*i][y-2*j]=="P" && cofKopia[x-i][y-j]=="O" && cofKopia[x+i][y+j]=="O"){
+                            var nazwa
+                            for(var h=-3; h<=1; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++;continue;
+                        }
+                    
+                    // O XXXP_ N
+                        if(x-4*i>=0 && y-4*j>=0 && y-4*j<15 && (x-5*i<0 || y-5*j<0 || y-5*j>=15 || cofKopia[x-5*i][y-5*j]=="X") && (x+i>=15 || y+j<0 || y+j>=15 || cofKopia[x+i][y+j]!="O") && cofKopia[x-4*i][y-4*j]=="O" && cofKopia[x-3*i][y-3*j]=="O" && cofKopia[x-2*i][y-2*j]=="O" && cofKopia[x-i][y-j]=="P"){
+                            var nazwa
+                            for(var h=-4; h<=0; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    // O XXPX_ N
+                        if(x-4*i>=0 && y-4*j>=0 && y-4*j<15 && (x-5*i<0 || y-5*j<0 || y-5*j>=15 || cofKopia[x-5*i][y-5*j]=="X") && (x+i>=15 || y+j<0 || y+j>=15 || cofKopia[x+i][y+j]!="O") && cofKopia[x-4*i][y-4*j]=="O" && cofKopia[x-3*i][y-3*j]=="O" && cofKopia[x-2*i][y-2*j]=="P" && cofKopia[x-i][y-j]=="O"){
+                            var nazwa
+                            for(var h=-4; h<=0; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++;continue;
+                        }
+                    // O XPXX_ N
+                        if(x-4*i>=0 && y-4*j>=0 && y-4*j<15 && (x-5*i<0 || y-5*j<0 || y-5*j>=15 || cofKopia[x-5*i][y-5*j]=="X") && (x+i>=15 || y+j<0 || y+j>=15 || cofKopia[x+i][y+j]!="O") && cofKopia[x-4*i][y-4*j]=="O" && cofKopia[x-3*i][y-3*j]=="P" && cofKopia[x-2*i][y-2*j]=="O" && cofKopia[x-i][y-j]=="O"){
+                            var nazwa
+                            for(var h=-4; h<=0; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++;continue;
+                        }
+                    
+                    
+                    // N _PXXX O
+                         if(x+4*i<15 && y+4*j>=0 && y+4*j<15 && (x+5*i>=15 || y+5*j<0 || y+5*j>=15 || cofKopia[x+5*i][y+5*j]=="X") && (x-i<0 || y-j<0 || y-j>=15 || cofKopia[x-i][y-j]!="O") && cofKopia[x+4*i][y+4*j]=="O" && cofKopia[x+3*i][y+3*j]=="O" && cofKopia[x+2*i][y+2*j]=="O" && cofKopia[x+i][y+j]=="P"){
+                            var nazwa
+                            for(var h=0; h<=4; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    // N _XPXX O
+                         if(x+4*i<15 && y+4*j>=0 && y+4*j<15 && (x+5*i>=15 || y+5*j<0 || y+5*j>=15 || cofKopia[x+5*i][y+5*j]=="X") && (x-i<0 || y-j<0 || y-j>=15 || cofKopia[x-i][y-j]!="O") && cofKopia[x+4*i][y+4*j]=="O" && cofKopia[x+3*i][y+3*j]=="O" && cofKopia[x+2*i][y+2*j]=="P" && cofKopia[x+i][y+j]=="O") {
+                            var nazwa
+                            for(var h=0; h<=4; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++;continue;
+                        }
+                    // N _XXPX O
+                         if(x+4*i<15 && y+4*j>=0 && y+4*j<15 && (x+5*i>=15 || y+5*j<0 || y+5*j>=15 || cofKopia[x+5*i][y+5*j]=="X") && (x-i<0 || y-j<0 || y-j>=15 || cofKopia[x-i][y-j]!="O") && cofKopia[x+4*i][y+4*j]=="O" && cofKopia[x+3*i][y+3*j]=="P" && cofKopia[x+2*i][y+2*j]=="O" && cofKopia[x+i][y+j]=="O") {
+                            var nazwa
+                            for(var h=0; h<=4; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++;continue;
+                        }
+                    
+                    //N P_XXX O
+                        if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || cofKopia[x+4*i][y+4*j]=="X") && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || cofKopia[x-2*i][y-2*j]!="O") && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="O" && cofKopia[x+2*i][y+2*j]=="O" &&  cofKopia[x+3*i][y+3*j]=="O"){
+                            var nazwa
+                            for(var h=-1; h<=3; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    //N X_PXX O
+                        if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || cofKopia[x+4*i][y+4*j]=="X") && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || cofKopia[x-2*i][y-2*j]!="O") && cofKopia[x-i][y-j]=="O" && cofKopia[x+i][y+j]=="P" && cofKopia[x+2*i][y+2*j]=="O" &&  cofKopia[x+3*i][y+3*j]=="O"){
+                            var nazwa
+                            for(var h=-1; h<=3; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    //N X_XPX O
+                        if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || cofKopia[x+4*i][y+4*j]=="X") && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || cofKopia[x-2*i][y-2*j]!="O") && cofKopia[x-i][y-j]=="O" && cofKopia[x+i][y+j]=="O" && cofKopia[x+2*i][y+2*j]=="P" &&  cofKopia[x+3*i][y+3*j]=="O"){
+                            var nazwa
+                            for(var h=-1; h<=3; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++;continue;
+                        }
+                    
+                    // N PX_XX O
+                        if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || cofKopia[x+3*i][y+3*j]=="X") && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || cofKopia[x-3*i][y-3*j]!="O") && cofKopia[x-2*i][y-2*j]=="P" && cofKopia[x-i][y-j]=="O" && cofKopia[x+i][y+j]=="O" &&  cofKopia[x+2*i][y+2*j]=="O"){
+                            var nazwa
+                            for(var h=-2; h<=2; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++;continue;
+                        }
+                    // N XP_XX O
+                        if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || cofKopia[x+3*i][y+3*j]=="X") && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || cofKopia[x-3*i][y-3*j]!="O") && cofKopia[x-2*i][y-2*j]=="O" && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="O" &&  cofKopia[x+2*i][y+2*j]=="O"){
+                            var nazwa
+                            for(var h=-2; h<=2; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    // N XX_PX O
+                        if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || cofKopia[x+3*i][y+3*j]=="X") && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || cofKopia[x-3*i][y-3*j]!="O") && cofKopia[x-2*i][y-2*j]=="O" && cofKopia[x-i][y-j]=="O" && cofKopia[x+i][y+j]=="P" &&  cofKopia[x+2*i][y+2*j]=="O"){
+                            var nazwa
+                            for(var h=-2; h<=2; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    
+                    // N PXX_X O
+                        if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || cofKopia[x+2*i][y+2*j]=="X") && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || cofKopia[x-4*i][y-4*j]!="O") && cofKopia[x-3*i][y-3*j]=="P" && cofKopia[x-2*i][y-2*j]=="O" && cofKopia[x-i][y-j]=="O" &&  cofKopia[x+i][y+j]=="O"){
+                            var nazwa
+                            for(var h=-3; h<=1; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++;continue;
+                        }
+                    // N XPX_X O
+                        if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || cofKopia[x+2*i][y+2*j]=="X") && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || cofKopia[x-4*i][y-4*j]!="O") && cofKopia[x-3*i][y-3*j]=="O" && cofKopia[x-2*i][y-2*j]=="P" && cofKopia[x-i][y-j]=="O" &&  cofKopia[x+i][y+j]=="O"){
+                            var nazwa
+                            for(var h=-3; h<=1; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                ileUkladow++;continue;
+                        }
+                    // N XXP_X O
+                        if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || cofKopia[x+2*i][y+2*j]=="X") && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || cofKopia[x-4*i][y-4*j]!="O") && cofKopia[x-3*i][y-3*j]=="O" && cofKopia[x-2*i][y-2*j]=="O" && cofKopia[x-i][y-j]=="P" &&  cofKopia[x+i][y+j]=="O"){
+                            var nazwa
+                            for(var h=-3; h<=1; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                            ileUkladow++;continue;
+                        }
+                    
+                    
+                    
+                    // NP _XXP PN
+                        if(x-i>=0 && x+4*i<15 && y-j>=0 && y-j<15 && y+4*j>=0 && y+4*j<15 && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || cofKopia[x-2*i][y-2*j]!="O") && (x+5*i>=15 || y+5*j<0 || y+5*j>=15 || cofKopia[x+5*i][y+5*j]!="O") && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="O" && cofKopia[x+2*i][y+2*j]=="O" && cofKopia[x+3*i][y+3*j]=="P" && cofKopia[x+4*i][y+4*j]=="P"){ 
+                            var nazwa
+                            for(var h=0; h<=3; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                                                                    ileUkladow++;continue;
+                        }
+                    // NP _XPX PN
+                        if(x-i>=0 && x+4*i<15 && y-j>=0 && y-j<15 && y+4*j>=0 && y+4*j<15 && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || cofKopia[x-2*i][y-2*j]!="O") && (x+5*i>=15 || y+5*j<0 || y+5*j>=15 || cofKopia[x+5*i][y+5*j]!="O") && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="O" && cofKopia[x+2*i][y+2*j]=="P" && cofKopia[x+3*i][y+3*j]=="O" && cofKopia[x+4*i][y+4*j]=="P"){ 
+                            var nazwa
+                            for(var h=0; h<=3; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                                                                    ileUkladow++;continue;
+                        }
+                    // NP _PXX PN
+                        if(x-i>=0 && x+4*i<15 && y-j>=0 && y-j<15 && y+4*j>=0 && y+4*j<15 && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || cofKopia[x-2*i][y-2*j]!="O") && (x+5*i>=15 || y+5*j<0 || y+5*j>=15 || cofKopia[x+5*i][y+5*j]!="O") && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="P" && cofKopia[x+2*i][y+2*j]=="O" && cofKopia[x+3*i][y+3*j]=="O" && cofKopia[x+4*i][y+4*j]=="P"){ 
+                            var nazwa
+                            for(var h=0; h<=3; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                ileUkladow++;continue;
+                        }
+                    
+                    // NP X_XP PN
+                        if(x-2*i>=0 && x+3*i<15 && y-2*j>=0 && y-2*j<15 && y+3*j>=0 && y+3*j<15 && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || cofKopia[x-3*i][y-3*j]!="O") && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || cofKopia[x+4*i][y+4*j]!="O") && cofKopia[x-2*i][y-2*j]=="P" && cofKopia[x-i][y-j]=="O" && cofKopia[x+i][y+j]=="O" && cofKopia[x+2*i][y+2*j]=="P" && cofKopia[x+3*i][y+3*j]=="P"){ 
+                            var nazwa
+                            for(var h=-1; h<=2; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                                                                        ileUkladow++;continue;
+                        }
+                    // NP X_PX PN
+                        if(x-2*i>=0 && x+3*i<15 && y-2*j>=0 && y-2*j<15 && y+3*j>=0 && y+3*j<15 && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || cofKopia[x-3*i][y-3*j]!="O") && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || cofKopia[x+4*i][y+4*j]!="O") && cofKopia[x-2*i][y-2*j]=="P" && cofKopia[x-i][y-j]=="O" && cofKopia[x+i][y+j]=="P" && cofKopia[x+2*i][y+2*j]=="O" && cofKopia[x+3*i][y+3*j]=="P"){ 
+                            var nazwa
+                            for(var h=-1; h<=2; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                ileUkladow++;continue;
+                        }
+                    // NP P_XX PN
+                        if(x-2*i>=0 && x+3*i<15 && y-2*j>=0 && y-2*j<15 && y+3*j>=0 && y+3*j<15 && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || cofKopia[x-3*i][y-3*j]!="O") && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || cofKopia[x+4*i][y+4*j]!="O") && cofKopia[x-2*i][y-2*j]=="P" && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="O" && cofKopia[x+2*i][y+2*j]=="O" && cofKopia[x+3*i][y+3*j]=="P"){ 
+                            var nazwa
+                            for(var h=-1; h<=2; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                ileUkladow++;continue;
+                        }
+                    
+                    // NP XX_P PN
+                        if(x-3*i>=0 && x+2*i<15 && y-3*j>=0 && y-3*j<15 && y+2*j>=0 && y+2*j<15 && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || cofKopia[x-4*i][y-4*j]!="O") && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || cofKopia[x+3*i][y+3*j]!="O") && cofKopia[x-3*i][y-3*j]=="P" && cofKopia[x-2*i][y-2*j]=="O" && cofKopia[x-i][y-j]=="O" && cofKopia[x+i][y+j]=="P" && cofKopia[x+2*i][y+2*j]=="P"){ 
+                            var nazwa
+                            for(var h=-2; h<=1; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                ileUkladow++;continue;
+                        }
+                    // NP XP_X PN
+                        if(x-3*i>=0 && x+2*i<15 && y-3*j>=0 && y-3*j<15 && y+2*j>=0 && y+2*j<15 && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || cofKopia[x-4*i][y-4*j]!="O") && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || cofKopia[x+3*i][y+3*j]!="O") && cofKopia[x-3*i][y-3*j]=="P" && cofKopia[x-2*i][y-2*j]=="O" && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="O" && cofKopia[x+2*i][y+2*j]=="P"){ 
+                            var nazwa
+                            for(var h=-2; h<=1; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                                                                    ileUkladow++;continue;
+                        }
+                    // NP PX_X PN
+                        if(x-3*i>=0 && x+2*i<15 && y-3*j>=0 && y-3*j<15 && y+2*j>=0 && y+2*j<15 && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || cofKopia[x-4*i][y-4*j]!="O") && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || cofKopia[x+3*i][y+3*j]!="O") && cofKopia[x-3*i][y-3*j]=="P" && cofKopia[x-2*i][y-2*j]=="P" && cofKopia[x-i][y-j]=="O" && cofKopia[x+i][y+j]=="O" && cofKopia[x+2*i][y+2*j]=="P"){ 
+                            var nazwa
+                            for(var h=-2; h<=1; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                                                                        ileUkladow++;continue;
+                        }
+                    
+                    // NP XXP_ PN
+                        if(x-4*i>=0 && x+i<15 && y-4*j>=0 && y-4*j<15 && y+j>=0 && y+j<15 && (x-5*i<0 || y-5*j<0 || y-5*j>=15 || cofKopia[x-5*i][y-5*j]!="O") && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || cofKopia[x+2*i][y+2*j]!="O") && cofKopia[x-4*i][y-4*j]=="P" && cofKopia[x-3*i][y-3*j]=="O" && cofKopia[x-2*i][y-2*j]=="O" && cofKopia[x-i][y-j]=="P" && cofKopia[x+i][y+j]=="P"){ 
+                            var nazwa
+                            for(var h=-3; h<=0; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                ileUkladow++;continue;
+                        }
+                    // NP XPX_ PN
+                        if(x-4*i>=0 && x+i<15 && y-4*j>=0 && y-4*j<15 && y+j>=0 && y+j<15 && (x-5*i<0 || y-5*j<0 || y-5*j>=15 || cofKopia[x-5*i][y-5*j]!="O") && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || cofKopia[x+2*i][y+2*j]!="O") && cofKopia[x-4*i][y-4*j]=="P" && cofKopia[x-3*i][y-3*j]=="O" && cofKopia[x-2*i][y-2*j]=="P" && cofKopia[x-i][y-j]=="O" && cofKopia[x+i][y+j]=="P"){ 
+                            var nazwa
+                            for(var h=-3; h<=0; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                                                                    ileUkladow++;continue;
+                        }
+                    // NP PXX_ PN
+                        if(x-4*i>=0 && x+i<15 && y-4*j>=0 && y-4*j<15 && y+j>=0 && y+j<15 && (x-5*i<0 || y-5*j<0 || y-5*j>=15 || cofKopia[x-5*i][y-5*j]!="O") && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || cofKopia[x+2*i][y+2*j]!="O") && cofKopia[x-4*i][y-4*j]=="P" && cofKopia[x-3*i][y-3*j]=="P" && cofKopia[x-2*i][y-2*j]=="O" && cofKopia[x-i][y-j]=="O" && cofKopia[x+i][y+j]=="P"){ 
+                            var nazwa
+                            for(var h=-3; h<=0; h++){
+                                if(cofKopia[x+i*h][y+j*h]=="O"){
+                                    wspX.push(x+i*h); wspY.push(y+j*h);
+                                    
+                                }
+                            }
+                                                                                                                                                                                    ileUkladow++;continue;
+                        }
+                }
+            }
+            if(ileUkladow>1){
+                var nazwa;
+                for(var i=0; i<wspX.length; i++){
+                    nazwa="pole["+(wspX[i])+"]["+(wspY[i])+"]";
+                    document.getElementById(nazwa).style.backgroundColor="pink";
+                }
+            }
+        }
+    }
+    return true;
+}
+
