@@ -1,5 +1,52 @@
 window.onload=function(){
+        document.getElementById("infoNag").setAttribute('onclick', "odslona(1)");
+        document.getElementById("zasadyNag").setAttribute('onclick', "odslona(2)");
+        document.getElementById("ciekawostkiNag").setAttribute('onclick', "odslona(3)");
+        document.getElementById("stronaNag").setAttribute('onclick', "odslona(4)");
+        document.getElementById("infoDane").style.display="none";
+        document.getElementById("zasadyDane").style.display="none";
+        document.getElementById("ciekawostkiDane").style.display="none";
+        document.getElementById("stronaDane").style.display="none";
     poczatek();
+}
+function odslona(co){
+    console.log("AAAAAAAAAA");
+    if(co==1){
+        if(document.getElementById("infoDane").style.display=="none")  { 
+            document.getElementById("infoDane").style.display="block";
+        document.getElementById("zasadyDane").style.display="none";
+        document.getElementById("ciekawostkiDane").style.display="none";
+        document.getElementById("stronaDane").style.display="none";
+                                                                       }
+        else  document.getElementById("infoDane").style.display="none";
+    }
+    if(co==2){
+        if(document.getElementById("zasadyDane").style.display=="none")  { 
+        document.getElementById("infoDane").style.display="none";
+        document.getElementById("zasadyDane").style.display="block";
+        document.getElementById("ciekawostkiDane").style.display="none";
+        document.getElementById("stronaDane").style.display="none";
+                                                                       }
+        else  document.getElementById("zasadyDane").style.display="none";
+    }
+     if(co==3){
+        if(document.getElementById("ciekawostkiDane").style.display=="none")  { 
+            document.getElementById("infoDane").style.display="none";
+        document.getElementById("zasadyDane").style.display="none";
+        document.getElementById("ciekawostkiDane").style.display="block";
+        document.getElementById("stronaDane").style.display="none";
+                                                                       }
+        else  document.getElementById("ciekawostkiDane").style.display="none";
+    }
+     if(co==4){
+        if(document.getElementById("stronaDane").style.display=="none")  { 
+            document.getElementById("infoDane").style.display="none";
+        document.getElementById("zasadyDane").style.display="none";
+        document.getElementById("ciekawostkiDane").style.display="none";
+        document.getElementById("stronaDane").style.display="block";
+                                                                       }
+        else  document.getElementById("stronaDane").style.display="none";
+    }
 }
 var kopanie=3;
 var kolejGracza;
@@ -63,12 +110,24 @@ function poczatek(){
                 wybrane[i][j]="P";
             }
             else{
-                const el = document.createElement("div");
+                
+                nazwaG="wiersz"+i;
+                var elG;
+                if(j==0){
+                      elG = document.createElement("tr");
+                    elG.id = nazwaG;
+                    tGame.appendChild(elG);
+                }
+                else{
+                    elG = document.getElementById(nazwaG);
+                }
+                const el = document.createElement("td");
                 el.id = nazwa;
+               // el.textContent="X";
                 el.classList.add("pola");
                 nazwa="wybor("+j+", "+i+");";
                 el.setAttribute( 'onclick', nazwa );
-                game.appendChild(el);
+                elG.appendChild(el);
             }
         }
     }
