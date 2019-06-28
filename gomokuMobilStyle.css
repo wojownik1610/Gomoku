@@ -147,7 +147,8 @@ html body
 }
 .nag
 {
-    padding-top: 9px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     text-align: center;
     color: brown;
     font-size: 0.5em;
@@ -295,7 +296,8 @@ html body
 .nag
 {
     display: block;
-    padding-top: 9px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     text-align: center;
     background-color:aquamarine;
     color: brown;
