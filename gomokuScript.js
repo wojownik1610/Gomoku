@@ -1,16 +1,15 @@
+var odslonaBool;
 window.onload=function(){
+    console.log(window.innerWidth);
         document.getElementById("infoNag").setAttribute('onclick', "odslona(1)");
         document.getElementById("zasadyNag").setAttribute('onclick', "odslona(2)");
         document.getElementById("ciekawostkiNag").setAttribute('onclick', "odslona(3)");
         document.getElementById("stronaNag").setAttribute('onclick', "odslona(4)");
-        document.getElementById("infoDane").style.display="none";
-        document.getElementById("zasadyDane").style.display="none";
-        document.getElementById("ciekawostkiDane").style.display="none";
-        document.getElementById("stronaDane").style.display="none";
+        
     poczatek();
 }
 function odslona(co){
-    console.log("AAAAAAAAAA");
+    if(!odslonaBool) return;
     if(co==1){
         if(document.getElementById("infoDane").style.display=="none")  { 
             document.getElementById("infoDane").style.display="block";
@@ -98,6 +97,21 @@ function poczatek(){
     document.getElementById("zajPolaAkt").innerHTML="<b>Akt zapełnienie</b><br>"+zajPolaAkt+"/225 "+Math.floor(10000*zajPolaAkt/225)/100+"%";
     document.getElementById("zajPolaNajw").innerHTML="<b>Max zapełnienie</b><br>"+zajPolaNajw+"/225 "+Math.floor(10000*zajPolaNajw/225)/100+"%";
     document.getElementById("zajPolaMin").innerHTML="<b>Min zapełnienie</b><br>"+zajPolaNajm+"/225 "+Math.floor(10000*zajPolaNajm/225)/100+"%";
+    if(window.innerWidth<1200){
+        document.getElementById("infoDane").style.display="none";
+        document.getElementById("zasadyDane").style.display="none";
+        document.getElementById("ciekawostkiDane").style.display="none";
+        document.getElementById("stronaDane").style.display="none";
+        odslonaBool=true;
+    }
+    else{
+        document.getElementById("infoDane").style.display="block";
+        document.getElementById("zasadyDane").style.display="block";
+        document.getElementById("ciekawostkiDane").style.display="block";
+        document.getElementById("stronaDane").style.display="block";
+        odslonaBool=false;
+    }
+    
     
     partia++;
     kolejGracza=true;
