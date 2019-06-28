@@ -12,7 +12,7 @@ window.onload=function(){
     poczatek();
 }
 function odslona(co){
-  //  if(!odslonaBool) return;
+   if(!odslonaBool) return;
     if(co==1){
         if(document.getElementById("infoDane").style.display=="none")  { 
             document.getElementById("infoDane").style.display="block";
