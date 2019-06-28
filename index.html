@@ -8,7 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="gomokuMobilStyle.css">
         
-        <script src="gomokuScript.js"></script>
+        
     </head>
     <body>
         <div id="container">
@@ -40,42 +40,55 @@
                 <div id="wynikNapis" ><b>WYNIK</b></div>
                 <div id="wynikCyfra">0 : 0</div>
                 <div id="wynikKto" >GRACZ : KOMP</div>
-                <div class="wnap" id="wynikNapis5" ><b></b></div>
-                <div class="wcyf" id="wynikCyfra5"></div>
-                <div class="wnap" id="wynikNapis4" ><b></b></div>
-                <div class="wcyf" id="wynikCyfra4"></div>
-                <div class="wnap" id="wynikNapis3" ><b></b></div>
-                <div class="wcyf" id="wynikCyfra3"></div>
-                <div class="wnap" id="wynikNapis1" ><b></b></div>
-                <div class="wcyf" id="wynikCyfra1"></div>
                 <button type="button" onclick="poczatek()" id="buttonZacznij">Zacznij od nowa</button> 
-                <div id="trudnoscNapis"><b>Poziom trudnosci</b></div>
-                <select id="poziomTrudnosci" name="nazwa">
-                    <option value=5>Trudny</option>
-                    <option value=4 selected>Normalny</option>
-                    <option value=3>Łatwy</option>
-                    <option value=1>Dziecinny</option>
-	           </select>
-                <div id="startNapis"><b>Pierwszy ruch</b></div>
-                <select id="startWybor" name="nazwa">
-                    <option value="5">Zawsze Komputer</option>
-                    <option value="4">Zawsze Gracz</option>
-                    <option value="3" selected>Przegrany</option>
-                    <option value="2">Wygrany</option>
-                    <option value="6">Na zmiane</option>
-                    <option value="1">Losowo</option>
-	           </select>
-                <div class="zap" id="zajPolaAkt"></div>
-                <div class="zap" id="zajPolaNajw"></div>
-                <div class="zap" id="zajPolaMin"></div>
-                <div id="guziczki">
-                    <div id="guziczkiNag"><b>Poszczególne ruchy</b></div>
-                    <div id="guziczkiKtory"></div>
-                    <button type="button" onclick="cofanie(-2)" id="button2t">&#9001&#9001</button>
-                    <button type="button" onclick="cofanie(-1)" id="button1t">&#9001</button>
-                    <button type="button" onclick="cofanie(1)" id="button1p">&#9002</button>
-                    <button type="button" onclick="cofanie(2)" id="buttoon2p">&#9002&#9002</button>
+
+                <div id="szczWynik" class="nagScore"><b>Szczegółowe wyniki</b></div>
+                <div id="szczWynikPole" class="poleScore">
+                    <div class="wnap" id="wynikNapis5" ><b>Trudny</b></div>
+                    <div class="wcyf" id="wynikCyfra5">0 : 0</div>
+                    <div class="wnap" id="wynikNapis4" ><b>Normalny</b></div>
+                    <div class="wcyf" id="wynikCyfra4">0 : 0</div>
+                    <div class="wnap" id="wynikNapis3" ><b>Łatwy</b></div>
+                    <div class="wcyf" id="wynikCyfra3">0 : 0</div>
+                    <div class="wnap" id="wynikNapis1" ><b>Dziecinny</b></div>
+                    <div class="wcyf" id="wynikCyfra1">0 : 0</div>
                 </div>
+                <div id="ustawienia" class="nagScore"><b>Ustawienia</b></div>
+                    <div id="ustawieniaPole" class="poleScore">
+                        <div id="trudnoscNapis"><b>Poziom trudnosci</b></div>
+                        <select id="poziomTrudnosci" name="nazwa">
+                            <option value=5>Trudny</option>
+                            <option value=4 selected>Normalny</option>
+                            <option value=3>Łatwy</option>
+                            <option value=1>Dziecinny</option>
+                        </select>
+                        <div id="startNapis"><b>Pierwszy ruch</b></div>
+                        <select id="startWybor" name="nazwa">
+                            <option value="5">Zawsze Komputer</option>
+                            <option value="4">Zawsze Gracz</option>
+                            <option value="3" selected>Przegrany</option>
+                            <option value="2">Wygrany</option>
+                            <option value="6">Na zmiane</option>
+                            <option value="1">Losowo</option>
+	                   </select>
+                    </div>
+                <div id="szczegoly" class="nagScore">Szczegóły</div>
+                    <div id="szczegolyPole" class="poleScore">
+                        <div class="zap" id="zajPolaAkt"></div>
+                        <div class="zap" id="zajPolaNajw"><b>Max zapełnienie</b><br>0/225 0%</div>
+                        <div class="zap" id="zajPolaMin"><b>Min zapełnienie</b><br>0/225 0%</div>
+                    </div>
+                <div id="guziczki">
+                    <div id="guziczkiNag" class="nagScore"><b>Poszczególne ruchy</b></div>
+                    <div id="guziczkiPole" class="poleScore">
+                        <div id="guziczkiKtory"></div>
+                        <button type="button" onclick="cofanie(-2)" id="button2t">&#9001&#9001</button>
+                        <button type="button" onclick="cofanie(-1)" id="button1t">&#9001</button>
+                        <button type="button" onclick="cofanie(1)" id="button1p">&#9002</button>
+                        <button type="button" onclick="cofanie(2)" id="buttoon2p">&#9002&#9002</button>
+                    </div>
+                </div>
+                    
             </div>
            
             <div id="footer">
@@ -85,4 +98,5 @@
         </div>
          
     </body>
+    <script src="gomokuScript.js"></script>
 </html>

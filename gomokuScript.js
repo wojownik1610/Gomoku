@@ -1,15 +1,18 @@
 var odslonaBool;
 window.onload=function(){
-    console.log(window.innerWidth);
         document.getElementById("infoNag").setAttribute('onclick', "odslona(1)");
         document.getElementById("zasadyNag").setAttribute('onclick', "odslona(2)");
         document.getElementById("ciekawostkiNag").setAttribute('onclick', "odslona(3)");
         document.getElementById("stronaNag").setAttribute('onclick', "odslona(4)");
+        document.getElementById("szczWynik").setAttribute('onclick', "odslona(5)");
+        document.getElementById("ustawienia").setAttribute('onclick', "odslona(6)");
+        document.getElementById("szczegoly").setAttribute('onclick', "odslona(7)");
+        document.getElementById("guziczkiNag").setAttribute('onclick', "odslona(8)");
         
     poczatek();
 }
 function odslona(co){
-    if(!odslonaBool) return;
+  //  if(!odslonaBool) return;
     if(co==1){
         if(document.getElementById("infoDane").style.display=="none")  { 
             document.getElementById("infoDane").style.display="block";
@@ -46,6 +49,38 @@ function odslona(co){
                                                                        }
         else  document.getElementById("stronaDane").style.display="none";
     }
+     if(co==5){
+        if(document.getElementById("szczWynikPole").style.display=="none") {
+            document.getElementById("szczWynikPole").style.display="block";
+        }
+         else{
+             document.getElementById("szczWynikPole").style.display="none";
+         }
+     }
+    if(co==6){
+        if(document.getElementById("ustawieniaPole").style.display=="none") {
+            document.getElementById("ustawieniaPole").style.display="block";
+        }
+         else{
+             document.getElementById("ustawieniaPole").style.display="none";
+         }
+     }
+    if(co==7){
+        if(document.getElementById("szczegolyPole").style.display=="none") {
+            document.getElementById("szczegolyPole").style.display="block";
+        }
+         else{
+             document.getElementById("szczegolyPole").style.display="none";
+         }
+     }
+    if(co==8){
+        if(document.getElementById("guziczkiPole").style.display=="none") {
+            document.getElementById("guziczkiPole").style.display="block";
+        }
+         else{
+             document.getElementById("guziczkiPole").style.display="none";
+         }
+     }
 }
 var kopanie=3;
 var kolejGracza;
@@ -95,21 +130,31 @@ function poczatek(){
     poprzedniRuchY=15;
     ktoZaczyna=document.getElementById("startWybor").value;
     document.getElementById("zajPolaAkt").innerHTML="<b>Akt zapełnienie</b><br>"+zajPolaAkt+"/225 "+Math.floor(10000*zajPolaAkt/225)/100+"%";
-    document.getElementById("zajPolaNajw").innerHTML="<b>Max zapełnienie</b><br>"+zajPolaNajw+"/225 "+Math.floor(10000*zajPolaNajw/225)/100+"%";
-    document.getElementById("zajPolaMin").innerHTML="<b>Min zapełnienie</b><br>"+zajPolaNajm+"/225 "+Math.floor(10000*zajPolaNajm/225)/100+"%";
     if(window.innerWidth<1200){
-        document.getElementById("infoDane").style.display="none";
-        document.getElementById("zasadyDane").style.display="none";
-        document.getElementById("ciekawostkiDane").style.display="none";
-        document.getElementById("stronaDane").style.display="none";
-        odslonaBool=true;
+        if(!odslonaBool){
+            document.getElementById("infoDane").style.display="none";
+            document.getElementById("zasadyDane").style.display="none";
+            document.getElementById("ciekawostkiDane").style.display="none";
+            document.getElementById("stronaDane").style.display="none";
+            document.getElementById("szczWynikPole").style.display="none";
+            document.getElementById("ustawieniaPole").style.display="none";
+            document.getElementById("szczegolyPole").style.display="none";
+            document.getElementById("guziczkiPole").style.display="none";
+            odslonaBool=true;
+        }
+        
     }
     else{
-        document.getElementById("infoDane").style.display="block";
-        document.getElementById("zasadyDane").style.display="block";
-        document.getElementById("ciekawostkiDane").style.display="block";
-        document.getElementById("stronaDane").style.display="block";
-        odslonaBool=false;
+            document.getElementById("infoDane").style.display="block";
+            document.getElementById("zasadyDane").style.display="block";
+            document.getElementById("ciekawostkiDane").style.display="block";
+            document.getElementById("stronaDane").style.display="block";
+            document.getElementById("szczWynikPole").style.display="block";
+            document.getElementById("ustawieniaPole").style.display="block";
+            document.getElementById("szczegolyPole").style.display="block";
+            document.getElementById("guziczkiPole").style.display="block";
+
+            odslonaBool=false;
     }
     
     
@@ -183,7 +228,6 @@ function poczatek(){
 }
 
 function wybor(i, j){
-    console.log(kolejGracza);
     if(!kolejGracza) return;
     if(wybrane[i][j]!="P") return;
     kolejGracza=false; 
@@ -226,7 +270,6 @@ function sprWyg(x, y){
 	}
 	if(ile==5){ 
         wygrana(znak);
-        console.log("koniec");
         return true;
     } 
 	ile=0;
@@ -248,7 +291,7 @@ function sprWyg(x, y){
 		}
 	}
 	if(ile==5){ 
-       wygrana(znak);console.log("koniec");
+       wygrana(znak);
         return true;
     }
 	ile=0;
@@ -270,7 +313,7 @@ function sprWyg(x, y){
 		}
 	}
 	if(ile==5){ 
-       wygrana(znak);console.log("koniec");
+       wygrana(znak);
         return true;
     }
 	ile=0;
@@ -296,7 +339,7 @@ function sprWyg(x, y){
 		}
 	}
 	if(ile==5){ 
-       wygrana(znak);console.log("koniec");
+       wygrana(znak);
         return true;
     }
 	ile=0;
@@ -315,16 +358,22 @@ function wygrana(znak){
             }
         }
     }
+    if(wynikGsz[trudnosc-1]==0 && wynikKsz[trudnosc-1]==0){
+        var napis = "wynikNapis"+trudnosc;
+        document.getElementById(napis).style.display="block";
+        napis = "wynikCyfra"+trudnosc;
+        document.getElementById(napis).style.display="block";
+    }
     if(znak=="X"){
         wynikG++;
+        wynikGsz[trudnosc-1]++;
         alert("Zwycięstwo!!!");
     }
     else{
         wynikK++;
+        wynikKsz[trudnosc-1]++;
          alert("Komputer okazał się lepszy!!!");
     }
-    if(znak=="X") wynikGsz[trudnosc-1]++;
-    else wynikKsz[trudnosc-1]++;
     document.getElementById("wynikCyfra").innerHTML=wynikG+" : "+wynikK;
     for(var i=0; i<5; i++){
         if(wynikGsz[i]==0 && wynikKsz[i]==0) continue;
@@ -333,7 +382,6 @@ function wygrana(znak){
             if(i==3) document.getElementById("wynikNapis4").innerHTML="<b>Normalny</b>";
             if(i==4) document.getElementById("wynikNapis5").innerHTML="<b>Trudny</b>";
             var napis = "wynikCyfra"+(i+1);
-        console.log(napis);
             document.getElementById(napis).innerHTML=wynikGsz[i]+" : "+wynikKsz[i];
     }
     if(znak=="X"){
@@ -346,6 +394,8 @@ function wygrana(znak){
     }
     if(zajPolaAkt>zajPolaNajw) zajPolaNajw=zajPolaAkt;
     if(zajPolaNajm==0 || zajPolaNajm>zajPolaAkt) zajPolaNajm=zajPolaAkt;
+    document.getElementById("zajPolaNajw").innerHTML="<b>Max zapełnienie</b><br>"+zajPolaNajw+"/225 "+Math.floor(10000*zajPolaNajw/225)/100+"%";
+    document.getElementById("zajPolaMin").innerHTML="<b>Min zapełnienie</b><br>"+zajPolaNajm+"/225 "+Math.floor(10000*zajPolaNajm/225)/100+"%";
     document.getElementById("guziczki").style.display="block";
     aktPokazRuch=kolejneRuchyX.length-1;
     document.getElementById("guziczkiKtory").innerHTML=kolejneRuchyX.length+"/"+kolejneRuchyX.length; 
@@ -383,6 +433,10 @@ function ruchKomp(x, y){
     if(trudnosc>1 && czteryWyg(true)){
         return;
     }
+    
+    if(trudnosc>4 && czteryOtwarte(false)){
+        return;
+    }
     if(trudnosc>3 && cztery(true)){
         return;
     }
@@ -390,10 +444,16 @@ function ruchKomp(x, y){
         return;
     }
     
-    if(trudnosc>3 && ustWygUklad(true)){
+    if(trudnosc>3 && ustWygUklad(true, true)){
         return;
     }
-    if(trudnosc>3 && blokWygUklad(true)){
+    if(trudnosc>3 && blokWygUklad(true, true)){
+        return;
+    }
+    if(trudnosc>3 && ustWygUklad(true, false)){
+        return;
+    }
+    if(trudnosc>3 && blokWygUklad(true, false)){
         return;
     }
     if(pierwszyRuch()){
@@ -605,6 +665,7 @@ function czteryOb(ruch){
         if(wybrane[wspX[i]][wspY[i]]!="P") continue;
         wybrane[wspX[i]][wspY[i]]="O";
                     wynik+=trzyWyg(false)*1000;
+                    wynik+=czteryOtwarte(false)*500;
                     wynik+=trzy(false)*100;
                     wynik+=dwaNaj(false)*10;
                     wynik+=dwaOk(false);
@@ -805,6 +866,94 @@ function czteryWyg(ruch){
     return false;
 }
 
+function czteryOtwarte(ruch){
+    var ile;
+    var koniecPetli;
+    var ruchIle=0;
+    var wspX = [];
+    var wspY = [];
+/*poziomo*/
+    for(var x=0; x<15; x++){
+        for(var y=0; y<15; y++){
+                if(wybrane[x][y]=="X") continue;
+            for(var i=1; i>=0; i--){
+                for(var j=1; j>=-1; j--){
+                    if(i==0 && j==0) break;
+                    if(x+5*i>=15 || y+5*j<0 || y+5*j>=15 || wybrane[x+5*i][y+5*j]!="P") continue;
+                    if(x-i<0 || y-j<0 || y-j>=15 || wybrane[x-i][y-j]!="P") continue;
+                    if(x+6*i<15 && y+6*j>=0 && y+6*j<15 && wybrane[x+6*i][y+6*j]=="O") continue;
+                    if(x-2*i>=0 && y-2*j>=0 && y-2*j<15 && wybrane[x-2*i][y-2*j]=="O") continue;
+                    ile=0;
+                    koniecPetli=false;
+                    for(var k=0; k<5; k++){
+                        switch(wybrane[x+i*k][y+j*k]){
+                            case "O":
+                                ile+=10;
+                                break;
+                            case "P":
+                                ile+=1;
+                                if(ile%10>2) koniecPetli=true;
+                                break;
+                            case "X":
+                                koniecPetli=true;
+                                break;   
+                        }
+                        if(koniecPetli) break;
+                    }
+                    if(koniecPetli) continue;
+                    if(ile==32 && ruch){
+                        for(var k=0; k<5; k++){
+                            if(wybrane[x+i*k][y+j*k]=="P"){
+                                wspX.push((x+i*k));
+                                wspY.push((y+j*k));
+                            }
+                        }
+                    }
+                    if(ile==32 && !ruch){
+                        ruchIle++;
+                    }
+                }
+            }   
+        }
+    }
+    if(!ruch) return ruchIle;
+    
+    if(wspX.length==0) return false;
+    var najWsp;
+    var najWynik=-1;
+    var wynik;
+    for(var i=0; i<wspX.length; i++){
+        wynik=0;
+        if(wybrane[wspX[i]][wspY[i]]!="P") continue;
+        wybrane[wspX[i]][wspY[i]]="O";
+                    wynik+=trzyWyg(false)*1000;
+                    wynik+=trzy(false)*100;
+                    wynik+=dwaNaj(false)*10;
+                    wynik+=dwaOk(false);
+        wybrane[wspX[i]][wspY[i]]="X";
+                     wynik+=czteryOb(false)*1000;
+                     wynik+=trzyOb(false)*1000;
+                     wynik+=blokWygUklad(false)*1000;
+        wybrane[wspX[i]][wspY[i]]="P";
+                if(najWynik==wynik){
+                    if(Math.floor(Math.random()*2)==1){
+                        najWsp=i;
+                    }
+                }
+                if(najWynik<wynik){
+                    najWynik=wynik;
+                    najWsp=i;
+                }
+    }
+        wybrane[wspX[najWsp]][wspY[najWsp]]="O";
+                        kolejneRuchyX.push(wspX[najWsp]);
+                        kolejneRuchyY.push(wspY[najWsp]);
+            var nazwa="pole["+wspX[najWsp]+"]["+wspY[najWsp]+"]";
+            document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
+        return true;
+                        
+}
+
 function cztery(ruch){
     var ile;
     var koniecPetli;
@@ -867,6 +1016,7 @@ function cztery(ruch){
         if(wybrane[wspX[i]][wspY[i]]!="P") continue;
         wybrane[wspX[i]][wspY[i]]="O";
                     wynik+=trzyWyg(false)*1000;
+                    wynik+=czteryOtwarte(false)*500;
                     wynik+=trzy(false)*100;
                     wynik+=dwaNaj(false)*10;
                     wynik+=dwaOk(false);
@@ -956,6 +1106,7 @@ function trzyOb(ruch){
         if(wybrane[wspX[i]][wspY[i]]!="P") continue;
         wybrane[wspX[i]][wspY[i]]="O";
                     wynik+=trzyWyg(false)*1000;
+                    wynik+=czteryOtwarte(false)*500;
                     wynik+=trzy(false)*100;
                     wynik+=dwaNaj(false)*10;
                     wynik+=dwaOk(false);
@@ -982,8 +1133,8 @@ function trzyOb(ruch){
         return true;
 }
 
-function ustWygUklad(ruch){
-   
+function ustWygUklad(ruch, czteryWyg){
+   var czteryWygJest=false;
     var ileUkladow;
     for(var x=0; x<15; x++){
         for(var y=0; y<15; y++){
@@ -994,111 +1145,107 @@ function ustWygUklad(ruch){
                     if(i==0 && j==0) break;
                     // O X_XXP N
                         if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || wybrane[x-2*i][y-2*j]=="X") && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || wybrane[x+4*i][y+4*j]!="O") && wybrane[x-i][y-j]=="O" && wybrane[x+i][y+j]=="O" && wybrane[x+2*i][y+2*j]=="O" && wybrane[x+3*i][y+3*j]=="P"){
-                            ileUkladow++; continue;
+                            ileUkladow++; continue; czteryWygJest=true;
                         }
                     // O X_XPX N
                         if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || wybrane[x-2*i][y-2*j]=="X") && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || wybrane[x+4*i][y+4*j]!="O") && wybrane[x-i][y-j]=="O" && wybrane[x+i][y+j]=="O" && wybrane[x+2*i][y+2*j]=="P" && wybrane[x+3*i][y+3*j]=="O"){
-                            ileUkladow++; continue;
+                            ileUkladow++; continue; czteryWygJest=true;
                         }
                     // O X_PXX N
                         if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || wybrane[x-2*i][y-2*j]=="X") && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || wybrane[x+4*i][y+4*j]!="O") && wybrane[x-i][y-j]=="O" && wybrane[x+i][y+j]=="P" && wybrane[x+2*i][y+2*j]=="O" && wybrane[x+3*i][y+3*j]=="O"){
-                            ileUkladow++; continue;
+                            ileUkladow++; continue; czteryWygJest=true;
                         }
                     
                     // O XX_XP N
                         if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || wybrane[x-3*i][y-3*j]=="X") && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || wybrane[x+3*i][y+3*j]!="O") && wybrane[x-2*i][y-2*j]=="O" && wybrane[x-i][y-j]=="O" && wybrane[x+i][y+j]=="O" && wybrane[x+2*i][y+2*j]=="P") {
-                            ileUkladow++; continue;
+                            ileUkladow++; continue; czteryWygJest=true;
                         }
                     // O XX_PX N
                         if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || wybrane[x-3*i][y-3*j]=="X") && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || wybrane[x+3*i][y+3*j]!="O") && wybrane[x-2*i][y-2*j]=="O" && wybrane[x-i][y-j]=="O" && wybrane[x+i][y+j]=="P" && wybrane[x+2*i][y+2*j]=="O") {
-                            ileUkladow++; continue;
+                            ileUkladow++; continue; czteryWygJest=true;
                         }
                     // O XP_XX N
                         if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || wybrane[x-3*i][y-3*j]=="X") && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || wybrane[x+3*i][y+3*j]!="O") && wybrane[x-2*i][y-2*j]=="O" && wybrane[x-i][y-j]=="P" && wybrane[x+i][y+j]=="O" && wybrane[x+2*i][y+2*j]=="O"){
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     
                     // O XXX_P N
                         if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || wybrane[x-4*i][y-4*j]=="X") && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || wybrane[x+2*i][y+2*j]!="O") && wybrane[x-3*i][y-3*j]=="O" && wybrane[x-2*i][y-2*j]=="O" && wybrane[x-i][y-j]=="O" && wybrane[x+i][y+j]=="P"){
-                            ileUkladow++;continue;
-                            ileUkladow++;continue;
-                            ileUkladow++;continue;
-                            ileUkladow++;continue;
-                            ileUkladow++;continue;
+                            ileUkladow++;continue;  czteryWygJest=true;
                         }
                     // O XXP_X N
                         if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || wybrane[x-4*i][y-4*j]=="X") && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || wybrane[x+2*i][y+2*j]!="O") && wybrane[x-3*i][y-3*j]=="O" && wybrane[x-2*i][y-2*j]=="O" && wybrane[x-i][y-j]=="P" && wybrane[x+i][y+j]=="O"){
-                            ileUkladow++;continue;
+                            ileUkladow++;continue;  czteryWygJest=true;
                         }
                     // O XPX_X N
                         if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || wybrane[x-4*i][y-4*j]=="X") && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || wybrane[x+2*i][y+2*j]!="O") && wybrane[x-3*i][y-3*j]=="O" && wybrane[x-2*i][y-2*j]=="P" && wybrane[x-i][y-j]=="O" && wybrane[x+i][y+j]=="O"){
-                            ileUkladow++;continue;
+                            ileUkladow++;continue;  czteryWygJest=true;
                         }
                     
                     // O XXXP_ N
                         if(x-4*i>=0 && y-4*j>=0 && y-4*j<15 && (x-5*i<0 || y-5*j<0 || y-5*j>=15 || wybrane[x-5*i][y-5*j]=="X") && (x+i>=15 || y+j<0 || y+j>=15 || wybrane[x+i][y+j]!="O") && wybrane[x-4*i][y-4*j]=="O" && wybrane[x-3*i][y-3*j]=="O" && wybrane[x-2*i][y-2*j]=="O" && wybrane[x-i][y-j]=="P"){
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     // O XXPX_ N
                         if(x-4*i>=0 && y-4*j>=0 && y-4*j<15 && (x-5*i<0 || y-5*j<0 || y-5*j>=15 || wybrane[x-5*i][y-5*j]=="X") && (x+i>=15 || y+j<0 || y+j>=15 || wybrane[x+i][y+j]!="O") && wybrane[x-4*i][y-4*j]=="O" && wybrane[x-3*i][y-3*j]=="O" && wybrane[x-2*i][y-2*j]=="P" && wybrane[x-i][y-j]=="O"){
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     // O XPXX_ N
                         if(x-4*i>=0 && y-4*j>=0 && y-4*j<15 && (x-5*i<0 || y-5*j<0 || y-5*j>=15 || wybrane[x-5*i][y-5*j]=="X") && (x+i>=15 || y+j<0 || y+j>=15 || wybrane[x+i][y+j]!="O") && wybrane[x-4*i][y-4*j]=="O" && wybrane[x-3*i][y-3*j]=="P" && wybrane[x-2*i][y-2*j]=="O" && wybrane[x-i][y-j]=="O"){
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     
                     
                     // N _PXXX O
                          if(x+4*i<15 && y+4*j>=0 && y+4*j<15 && (x+5*i>=15 || y+5*j<0 || y+5*j>=15 || wybrane[x+5*i][y+5*j]=="X") && (x-i<0 || y-j<0 || y-j>=15 || wybrane[x-i][y-j]!="O") && wybrane[x+4*i][y+4*j]=="O" && wybrane[x+3*i][y+3*j]=="O" && wybrane[x+2*i][y+2*j]=="O" && wybrane[x+i][y+j]=="P"){
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     // N _XPXX O
                          if(x+4*i<15 && y+4*j>=0 && y+4*j<15 && (x+5*i>=15 || y+5*j<0 || y+5*j>=15 || wybrane[x+5*i][y+5*j]=="X") && (x-i<0 || y-j<0 || y-j>=15 || wybrane[x-i][y-j]!="O") && wybrane[x+4*i][y+4*j]=="O" && wybrane[x+3*i][y+3*j]=="O" && wybrane[x+2*i][y+2*j]=="P" && wybrane[x+i][y+j]=="O") {
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     // N _XXPX O
                          if(x+4*i<15 && y+4*j>=0 && y+4*j<15 && (x+5*i>=15 || y+5*j<0 || y+5*j>=15 || wybrane[x+5*i][y+5*j]=="X") && (x-i<0 || y-j<0 || y-j>=15 || wybrane[x-i][y-j]!="O") && wybrane[x+4*i][y+4*j]=="O" && wybrane[x+3*i][y+3*j]=="P" && wybrane[x+2*i][y+2*j]=="O" && wybrane[x+i][y+j]=="O") {
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     
                     //N P_XXX O
                         if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || wybrane[x+4*i][y+4*j]=="X") && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || wybrane[x-2*i][y-2*j]!="O") && wybrane[x-i][y-j]=="P" && wybrane[x+i][y+j]=="O" && wybrane[x+2*i][y+2*j]=="O" &&  wybrane[x+3*i][y+3*j]=="O"){
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     //N X_PXX O
                         if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || wybrane[x+4*i][y+4*j]=="X") && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || wybrane[x-2*i][y-2*j]!="O") && wybrane[x-i][y-j]=="O" && wybrane[x+i][y+j]=="P" && wybrane[x+2*i][y+2*j]=="O" &&  wybrane[x+3*i][y+3*j]=="O"){
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     //N X_XPX O
                         if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || wybrane[x+4*i][y+4*j]=="X") && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || wybrane[x-2*i][y-2*j]!="O") && wybrane[x-i][y-j]=="O" && wybrane[x+i][y+j]=="O" && wybrane[x+2*i][y+2*j]=="P" &&  wybrane[x+3*i][y+3*j]=="O"){
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     
                     // N PX_XX O
                         if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || wybrane[x+3*i][y+3*j]=="X") && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || wybrane[x-3*i][y-3*j]!="O") && wybrane[x-2*i][y-2*j]=="P" && wybrane[x-i][y-j]=="O" && wybrane[x+i][y+j]=="O" &&  wybrane[x+2*i][y+2*j]=="O"){
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     // N XP_XX O
                         if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || wybrane[x+3*i][y+3*j]=="X") && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || wybrane[x-3*i][y-3*j]!="O") && wybrane[x-2*i][y-2*j]=="O" && wybrane[x-i][y-j]=="P" && wybrane[x+i][y+j]=="O" &&  wybrane[x+2*i][y+2*j]=="O"){
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     // N XX_PX O
                         if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || wybrane[x+3*i][y+3*j]=="X") && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || wybrane[x-3*i][y-3*j]!="O") && wybrane[x-2*i][y-2*j]=="O" && wybrane[x-i][y-j]=="O" && wybrane[x+i][y+j]=="P" &&  wybrane[x+2*i][y+2*j]=="O"){
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     
                     // N PXX_X O
                         if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || wybrane[x+2*i][y+2*j]=="X") && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || wybrane[x-4*i][y-4*j]!="O") && wybrane[x-3*i][y-3*j]=="P" && wybrane[x-2*i][y-2*j]=="O" && wybrane[x-i][y-j]=="O" &&  wybrane[x+i][y+j]=="O"){
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     // N XPX_X O
                         if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || wybrane[x+2*i][y+2*j]=="X") && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || wybrane[x-4*i][y-4*j]!="O") && wybrane[x-3*i][y-3*j]=="O" && wybrane[x-2*i][y-2*j]=="P" && wybrane[x-i][y-j]=="O" &&  wybrane[x+i][y+j]=="O"){
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     // N XXP_X O
                         if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || wybrane[x+2*i][y+2*j]=="X") && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || wybrane[x-4*i][y-4*j]!="O") && wybrane[x-3*i][y-3*j]=="O" && wybrane[x-2*i][y-2*j]=="O" && wybrane[x-i][y-j]=="P" &&  wybrane[x+i][y+j]=="O"){
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     
                     
@@ -1156,6 +1303,9 @@ function ustWygUklad(ruch){
                         }
                 }
             }
+            if(ruch && czteryWyg){
+                if(!czteryWygJest) continue;
+            }
             if(ileUkladow>1 && ruch){
                         wybrane[x][y]="O";
                         kolejneRuchyX.push(x);
@@ -1174,7 +1324,8 @@ function ustWygUklad(ruch){
     return false;
 }
 
-function blokWygUklad(ruch){
+function blokWygUklad(ruch, czteryWyg){
+    var czteryWygJest=false;
     var ileUkladow;
     var ruchIle=0;
     for(var x=0; x<15; x++){
@@ -1193,76 +1344,76 @@ function blokWygUklad(ruch){
                         if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || wybrane[x-2*i][y-2*j]=="O") && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || wybrane[x+4*i][y+4*j]!="X") && wybrane[x-i][y-j]=="X" && wybrane[x+i][y+j]=="X" && wybrane[x+2*i][y+2*j]=="X" && wybrane[x+3*i][y+3*j]=="P"){
                             wspX.push(x+3*i);
                             wspY.push(y+3*j);
-                            ileUkladow++; continue;
+                            ileUkladow++; continue; czteryWygJest=true;
                         }
                     // O X_XPX N
                         if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || wybrane[x-2*i][y-2*j]=="O") && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || wybrane[x+4*i][y+4*j]!="X") && wybrane[x-i][y-j]=="X" && wybrane[x+i][y+j]=="X" && wybrane[x+2*i][y+2*j]=="P" && wybrane[x+3*i][y+3*j]=="X"){
                             wspX.push(x+2*i);
                             wspY.push(y+2*j);
-                            ileUkladow++; continue;
+                            ileUkladow++; continue; czteryWygJest=true;
                         }
                     // O X_PXX N
                         if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || wybrane[x-2*i][y-2*j]=="O") && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || wybrane[x+4*i][y+4*j]!="X") && wybrane[x-i][y-j]=="X" && wybrane[x+i][y+j]=="P" && wybrane[x+2*i][y+2*j]=="X" && wybrane[x+3*i][y+3*j]=="X"){
                             wspX.push(x+i);
                             wspY.push(y+j);
-                            ileUkladow++; continue;
+                            ileUkladow++; continue; czteryWygJest=true;
                         }
                     
                     // O XX_XP N
                         if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || wybrane[x-3*i][y-3*j]=="O") && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || wybrane[x+3*i][y+3*j]!="X") && wybrane[x-2*i][y-2*j]=="X" && wybrane[x-i][y-j]=="X" && wybrane[x+i][y+j]=="X" && wybrane[x+2*i][y+2*j]=="P") {
                             wspX.push(x+2*i);
                             wspY.push(y+2*j);
-                            ileUkladow++; continue;
+                            ileUkladow++; continue; czteryWygJest=true;
                         }
                     // O XX_PX N
                         if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || wybrane[x-3*i][y-3*j]=="O") && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || wybrane[x+3*i][y+3*j]!="X") && wybrane[x-2*i][y-2*j]=="X" && wybrane[x-i][y-j]=="X" && wybrane[x+i][y+j]=="P" && wybrane[x+2*i][y+2*j]=="X") {
                             wspX.push(x+i);
                             wspY.push(y+j);
-                            ileUkladow++; continue;
+                            ileUkladow++; continue; czteryWygJest=true;
                         }
                     // O XP_XX N
                         if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || wybrane[x-3*i][y-3*j]=="O") && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || wybrane[x+3*i][y+3*j]!="X") && wybrane[x-2*i][y-2*j]=="X" && wybrane[x-i][y-j]=="P" && wybrane[x+i][y+j]=="X" && wybrane[x+2*i][y+2*j]=="X"){
                             wspX.push(x-i);
                             wspY.push(y-j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     
                     // O XXX_P N
                         if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || wybrane[x-4*i][y-4*j]=="O") && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || wybrane[x+2*i][y+2*j]!="X") && wybrane[x-3*i][y-3*j]=="X" && wybrane[x-2*i][y-2*j]=="X" && wybrane[x-i][y-j]=="X" && wybrane[x+i][y+j]=="P"){
                             wspX.push(x+i);
                             wspY.push(y+j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     // O XXP_X N
                         if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || wybrane[x-4*i][y-4*j]=="O") && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || wybrane[x+2*i][y+2*j]!="X") && wybrane[x-3*i][y-3*j]=="X" && wybrane[x-2*i][y-2*j]=="X" && wybrane[x-i][y-j]=="P" && wybrane[x+i][y+j]=="X"){
                             wspX.push(x-i);
                             wspY.push(y-j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     // O XPX_X N
                         if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || wybrane[x-4*i][y-4*j]=="O") && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || wybrane[x+2*i][y+2*j]!="X") && wybrane[x-3*i][y-3*j]=="X" && wybrane[x-2*i][y-2*j]=="P" && wybrane[x-i][y-j]=="X" && wybrane[x+i][y+j]=="X"){
                             wspX.push(x-2*i);
                             wspY.push(y-2*j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     
                     // O XXXP_ N
                         if(x-4*i>=0 && y-4*j>=0 && y-4*j<15 && (x-5*i<0 || y-5*j<0 || y-5*j>=15 || wybrane[x-5*i][y-5*j]=="O") && (x+i>=15 || y+j<0 || y+j>=15 || wybrane[x+i][y+j]!="X") && wybrane[x-4*i][y-4*j]=="X" && wybrane[x-3*i][y-3*j]=="X" && wybrane[x-2*i][y-2*j]=="X" && wybrane[x-i][y-j]=="P"){
                             wspX.push(x-i);
                             wspY.push(y-j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     // O XXPX_ N
                         if(x-4*i>=0 && y-4*j>=0 && y-4*j<15 && (x-5*i<0 || y-5*j<0 || y-5*j>=15 || wybrane[x-5*i][y-5*j]=="O") && (x+i>=15 || y+j<0 || y+j>=15 || wybrane[x+i][y+j]!="X") && wybrane[x-4*i][y-4*j]=="X" && wybrane[x-3*i][y-3*j]=="X" && wybrane[x-2*i][y-2*j]=="P" && wybrane[x-i][y-j]=="X"){
                             wspX.push(x-2*i);
                             wspY.push(y-2*j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     // O XPXX_ N
                         if(x-4*i>=0 && y-4*j>=0 && y-4*j<15 && (x-5*i<0 || y-5*j<0 || y-5*j>=15 || wybrane[x-5*i][y-5*j]=="O") && (x+i>=15 || y+j<0 || y+j>=15 || wybrane[x+i][y+j]!="X") && wybrane[x-4*i][y-4*j]=="X" && wybrane[x-3*i][y-3*j]=="P" && wybrane[x-2*i][y-2*j]=="X" && wybrane[x-i][y-j]=="X"){
                             wspX.push(x-3*i);
                             wspY.push(y-3*j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     
                     
@@ -1270,76 +1421,76 @@ function blokWygUklad(ruch){
                          if(x+4*i<15 && y+4*j>=0 && y+4*j<15 && (x+5*i>=15 || y+5*j<0 || y+5*j>=15 || wybrane[x+5*i][y+5*j]=="O") && (x-i<0 || y-j<0 || y-j>=15 || wybrane[x-i][y-j]!="X") && wybrane[x+4*i][y+4*j]=="X" && wybrane[x+3*i][y+3*j]=="X" && wybrane[x+2*i][y+2*j]=="X" && wybrane[x+i][y+j]=="P"){
                             wspX.push(x+i);
                             wspY.push(y+j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     // N _XPXX O
                          if(x+4*i<15 && y+4*j>=0 && y+4*j<15 && (x+5*i>=15 || y+5*j<0 || y+5*j>=15 || wybrane[x+5*i][y+5*j]=="O") && (x-i<0 || y-j<0 || y-j>=15 || wybrane[x-i][y-j]!="X") && wybrane[x+4*i][y+4*j]=="X" && wybrane[x+3*i][y+3*j]=="X" && wybrane[x+2*i][y+2*j]=="P" && wybrane[x+i][y+j]=="X") {
                             wspX.push(x+2*i);
                             wspY.push(y+2*j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     // N _XXPX O
                          if(x+4*i<15 && y+4*j>=0 && y+4*j<15 && (x+5*i>=15 || y+5*j<0 || y+5*j>=15 || wybrane[x+5*i][y+5*j]=="O") && (x-i<0 || y-j<0 || y-j>=15 || wybrane[x-i][y-j]!="X") && wybrane[x+4*i][y+4*j]=="X" && wybrane[x+3*i][y+3*j]=="P" && wybrane[x+2*i][y+2*j]=="X" && wybrane[x+i][y+j]=="X") {
                             wspX.push(x+3*i);
                             wspY.push(y+3*j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     
                     //N P_XXX O
                         if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || wybrane[x+4*i][y+4*j]=="O") && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || wybrane[x-2*i][y-2*j]!="X") && wybrane[x-i][y-j]=="P" && wybrane[x+i][y+j]=="X" && wybrane[x+2*i][y+2*j]=="X" &&  wybrane[x+3*i][y+3*j]=="X"){
                             wspX.push(x-i);
                             wspY.push(y-j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     //N X_PXX O
                         if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || wybrane[x+4*i][y+4*j]=="O") && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || wybrane[x-2*i][y-2*j]!="X") && wybrane[x-i][y-j]=="X" && wybrane[x+i][y+j]=="P" && wybrane[x+2*i][y+2*j]=="X" &&  wybrane[x+3*i][y+3*j]=="X"){
                             wspX.push(x+i);
                             wspY.push(y+j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     //N X_XPX O
                         if(x-i>=0 && x+3*i<15 && y-j>=0 && y-j<15 && y+3*j>=0 && y+3*j<15 && (x+4*i>=15 || y+4*j<0 || y+4*j>=15 || wybrane[x+4*i][y+4*j]=="O") && (x-2*i<0 || y-2*j<0 || y-2*j>=15 || wybrane[x-2*i][y-2*j]!="X") && wybrane[x-i][y-j]=="X" && wybrane[x+i][y+j]=="X" && wybrane[x+2*i][y+2*j]=="P" &&  wybrane[x+3*i][y+3*j]=="X"){
                             wspX.push(x+2*i);
                             wspY.push(y+2*j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     
                     // N PX_XX O
                         if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || wybrane[x+3*i][y+3*j]=="O") && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || wybrane[x-3*i][y-3*j]!="X") && wybrane[x-2*i][y-2*j]=="P" && wybrane[x-i][y-j]=="X" && wybrane[x+i][y+j]=="X" &&  wybrane[x+2*i][y+2*j]=="X"){
                             wspX.push(x-2*i);
                             wspY.push(y-2*j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     // N XP_XX O
                         if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || wybrane[x+3*i][y+3*j]=="O") && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || wybrane[x-3*i][y-3*j]!="X") && wybrane[x-2*i][y-2*j]=="X" && wybrane[x-i][y-j]=="P" && wybrane[x+i][y+j]=="X" &&  wybrane[x+2*i][y+2*j]=="X"){
                             wspX.push(x-i);
                             wspY.push(y-j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     // N XX_PX O
                         if(x-2*i>=0 && x+2*i<15 && y-2*j>=0 && y-2*j<15 && y+2*j>=0 && y+2*j<15 && (x+3*i>=15 || y+3*j<0 || y+3*j>=15 || wybrane[x+3*i][y+3*j]=="O") && (x-3*i<0 || y-3*j<0 || y-3*j>=15 || wybrane[x-3*i][y-3*j]!="X") && wybrane[x-2*i][y-2*j]=="X" && wybrane[x-i][y-j]=="X" && wybrane[x+i][y+j]=="P" &&  wybrane[x+2*i][y+2*j]=="X"){
                             wspX.push(x+i);
                             wspY.push(y+j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     
                     // N PXX_X O
                         if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || wybrane[x+2*i][y+2*j]=="O") && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || wybrane[x-4*i][y-4*j]!="X") && wybrane[x-3*i][y-3*j]=="P" && wybrane[x-2*i][y-2*j]=="X" && wybrane[x-i][y-j]=="X" &&  wybrane[x+i][y+j]=="X"){
                             wspX.push(x-3*i);
                             wspY.push(y-3*j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     // N XPX_X O
                         if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || wybrane[x+2*i][y+2*j]=="O") && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || wybrane[x-4*i][y-4*j]!="X") && wybrane[x-3*i][y-3*j]=="X" && wybrane[x-2*i][y-2*j]=="P" && wybrane[x-i][y-j]=="X" &&  wybrane[x+i][y+j]=="X"){
                             wspX.push(x-2*i);
                             wspY.push(y-2*j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     // N XXP_X O
                         if(x-3*i>=0 && x+i<15 && y-3*j>=0 && y-3*j<15 && y+j>=0 && y+j<15 && (x+2*i>=15 || y+2*j<0 || y+2*j>=15 || wybrane[x+2*i][y+2*j]=="O") && (x-4*i<0 || y-4*j<0 || y-4*j>=15 || wybrane[x-4*i][y-4*j]!="X") && wybrane[x-3*i][y-3*j]=="X" && wybrane[x-2*i][y-2*j]=="X" && wybrane[x-i][y-j]=="P" &&  wybrane[x+i][y+j]=="X"){
                             wspX.push(x-i);
                             wspY.push(y-j);
-                            ileUkladow++;continue;
+                            ileUkladow++;continue; czteryWygJest=true;
                         }
                     
                     
@@ -1461,8 +1612,10 @@ function blokWygUklad(ruch){
                         }
                 }
             }
+            if(ruch && czteryWyg){
+                if(!czteryWygJest) continue;
+            }
             if(ileUkladow>2 && ruch){
-                console.log(ileUkladow);
                         wybrane[x][y]="O";
                         kolejneRuchyX.push(x);
                         kolejneRuchyY.push(y);
@@ -1471,7 +1624,7 @@ function blokWygUklad(ruch){
                         return true;
             }
             if(ileUkladow==2 && ruch){
-                var wynik=0;
+                var wynik=-1;
                 var wynikAkt;
                 var wspNaj;
                     for(var h=0; h<wspX.length; h++){
@@ -1479,13 +1632,14 @@ function blokWygUklad(ruch){
                         if(wybrane[wspX[h]][wspY[h]]!="P") continue;
                             wybrane[wspX[h]][wspY[h]]="O";
                                 wynikAkt+=trzyWyg(false)*1000;
+                                wynikAkt+=czteryOtwarte(false)*500;
                                 wynikAkt+=trzy(false)*100;
                                 wynikAkt+=dwaNaj(false)*10;
                                 wynikAkt+=dwaOk(false);
                         wybrane[wspX[h]][wspY[h]]="X";
-                            wynik+=czteryOb(false)*1000;
-                            wynik+=trzyOb(false)*1000;
-                            wynik+=blokWygUklad(false)*1000;
+                            wynikAkt+=czteryOb(false)*1000;
+                            wynikAkt+=trzyOb(false)*1000;
+                            wynikAkt+=blokWygUklad(false)*1000;
                             wybrane[wspX[h]][wspY[h]]="P";
                         if(wynikAkt>wynik){
                             wynik=wynikAkt;
@@ -1521,7 +1675,6 @@ function alfaBeta(deep, alfa, beta, znakGracza){
    // if(deep!=kopanie && znakGracza=="O" && (piatka(false) || czteryWyg(false) || ustWygUklad(false))) return 1000000;info=1;
    // if(znakGracza=="X" && (czteryOb(false)>0 /*|| blokWygUklad(false)>0*/)) return -1000000;
     if(czyWyg("X")) return -1000000;
-    if(deep==kopanie-1) console.log("kopie");
     if(deep==0){
         var wynik=0;
         wynik+=piatka(false)*100000;
@@ -1567,9 +1720,7 @@ function alfaBeta(deep, alfa, beta, znakGracza){
             if(znakGracza=="O") m=alfaBeta(deep-1, alfa, beta, "X");
             else m=alfaBeta(deep-1, alfa, beta, "O");
             wybrane[x][y]="P";
-                               if(pokaz && deep==kopanie-1) console.log("alfa "+m+" x="+x+" y="+y);
             if(deep==kopanie){info=9;
-               // console.log("alfa "+m+" x="+x+" y="+y);
                 if(m>alfa){
                     wspX=x;
                     wspY=y;
@@ -1591,7 +1742,6 @@ function alfaBeta(deep, alfa, beta, znakGracza){
     }
     if(deep==kopanie){info=12+wspX*1000;
         if(wspX!=15){
-            console.log("WYNIK!!!= "+alfa);
             wybrane[wspX][wspY]="O";
             var nazwa="pole["+(wspX)+"]["+(wspY)+"]";
             document.getElementById(nazwa).innerHTML="O"; document.getElementById(nazwa).style.backgroundColor="coral";
@@ -1664,6 +1814,7 @@ function trzyWyg(ruch){
         if(wybrane[wspX[i]][wspY[i]]!="P") continue;
         wybrane[wspX[i]][wspY[i]]="O";
                     wynik+=trzyWyg(false)*1000;
+                    wynik+=czteryOtwarte(false)*500;
                     wynik+=trzy(false)*100;
                     wynik+=dwaNaj(false)*10;
                     wynik+=dwaOk(false);
@@ -1753,6 +1904,7 @@ function trzy(ruch){
         if(wybrane[wspX[i]][wspY[i]]!="P") continue;
         wybrane[wspX[i]][wspY[i]]="O";
                     wynik+=trzyWyg(false)*1000;
+                    wynik+=czteryOtwarte(false)*500;
                     wynik+=trzy(false)*100;
                     wynik+=dwaNaj(false)*10;
                     wynik+=dwaOk(false);
@@ -1770,7 +1922,6 @@ function trzy(ruch){
                     najWynik=wynik;
                     najWsp=i;
                 }
-        console.log(i+" "+wspX[i]+" "+wspY[i]+" "+wynik);
     }
         wybrane[wspX[najWsp]][wspY[najWsp]]="O";
                                         kolejneRuchyX.push(wspX[najWsp]);
@@ -1860,7 +2011,6 @@ while(min>=(ilePolPrzeciwnikaMin*10+(4-ilePolPrzeciwnikaMin)) && wspX.length==0)
                     najWynik=wynik;
                     najWsp=i;
                 }
-        console.log(i+" "+wspX[i]+" "+wspY[i]+" "+wynik);
     }
         wybrane[wspX[najWsp]][wspY[najWsp]]="O";
                                         kolejneRuchyX.push(wspX[najWsp]);
@@ -1931,6 +2081,7 @@ function dwaNaj(ruch){
         if(wybrane[wspX[i]][wspY[i]]!="P") continue;
         wybrane[wspX[i]][wspY[i]]="O";
                     wynik+=trzyWyg(false)*1000;
+                    wynik+=czteryOtwarte(false)*500;
                     wynik+=trzy(false)*100;
                     wynik+=dwaNaj(false)*10;
                     wynik+=dwaOk(false);
@@ -2017,6 +2168,7 @@ function dwaOk(ruch){
         if(wybrane[wspX[i]][wspY[i]]!="P") continue;
         wybrane[wspX[i]][wspY[i]]="O";
                     wynik+=trzyWyg(false)*1000;
+                    wynik+=czteryOtwarte(false)*500;
                     wynik+=trzy(false)*100;
                     wynik+=dwaNaj(false)*10;
                     wynik+=dwaOk(false);
@@ -2121,7 +2273,6 @@ function cofanie(jakiRuch){
         for(var i=0; i<15; i++){
             for(var j=0; j<15; j++){
                 cofKopia[i][j]="P";
-                console.log("-2 "+wybrane[i][j]);
                 nazwa="pole["+j+"]["+i+"]";
                 document.getElementById(nazwa).innerHTML="";
             }
@@ -2129,7 +2280,6 @@ function cofanie(jakiRuch){
     }
     if(jakiRuch==-1){
         cofKopia[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]="P";
-        console.log(aktPokazRuch+" "+kolejneRuchyX[aktPokazRuch]+" "+kolejneRuchyY[aktPokazRuch]);
         nazwa=nazwa="pole["+kolejneRuchyX[aktPokazRuch]+"]["+kolejneRuchyY[aktPokazRuch]+"]";
         document.getElementById(nazwa).innerHTML="";
         if(wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]=="W") document.getElementById(nazwa).style.backgroundColor="green";
@@ -2139,7 +2289,6 @@ function cofanie(jakiRuch){
     if(jakiRuch==1){
         aktPokazRuch++;
         nazwa="pole["+kolejneRuchyX[aktPokazRuch]+"]["+kolejneRuchyY[aktPokazRuch]+"]";
-        console.log("1 "+wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]);
         if(wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]=="X"){
             document.getElementById(nazwa).innerHTML="X";
             cofKopia[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]="X";
@@ -2150,7 +2299,6 @@ function cofanie(jakiRuch){
                     cofKopia[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]="O";
                 }
                 else {
-                    console.log("11(-1) "+wybrane[kolejneRuchyX[aktPokazRuch]-1][kolejneRuchyY[aktPokazRuch]-1]);
                     if(wygrany=="X"){
                          document.getElementById(nazwa).innerHTML="X"; 
                         cofKopia[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]="X";
@@ -2162,7 +2310,6 @@ function cofanie(jakiRuch){
                     document.getElementById(nazwa).style.backgroundColor="green";
                 }
             } 
-        console.log("11 "+wybrane[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]);
     }
     if(jakiRuch==2){
         if(aktPokazRuch==-1) aktPokazRuch=0;
@@ -2178,7 +2325,6 @@ function cofanie(jakiRuch){
                     cofKopia[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]="O";
                 }
                 else {
-                    console.log("11(-1) "+wybrane[kolejneRuchyX[aktPokazRuch]-1][kolejneRuchyY[aktPokazRuch]-1]);
                     if(wygrany=="X"){
                          document.getElementById(nazwa).innerHTML="X"; 
                         cofKopia[kolejneRuchyX[aktPokazRuch]][kolejneRuchyY[aktPokazRuch]]="X";

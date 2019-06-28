@@ -1,194 +1,205 @@
-html body
-{
-    background-color: dimgray;
-}
-
-@media (max-width: 1099px){
-
-#container
-{
-    width: auto;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-}
-#logo
-{
-    background-color: black;
-    color: bisque;
-    text-align: center;
-    padding: 15px;
-}
-#score
-{
-    background-color: lightblue;
-    width:auto;
-    padding: 10px;
-    font-size: 2em;
-  right: 0;
-  bottom: 70%;
-}
-#game
-{
-    background-color: lightgray;
-    height: 690px;
-    padding-top: 690px;
-    padding: 20px;
-    font-size: 5em;
-    overflow-x:auto;
-    min-height: auto;
-    min-width: auto;
-    margin-left: auto;
-    margin-right: auto;
-   
-}
-#info
-{
-     float:inherit;
-    background-color: lightgreen;
-    
-    width: auto;
-    margin: auto;
-    padding: 10px;
-    font-size: 3em;
-   
-}
-#footer
-{
-    clear: both;
-    background-color: black;
-    color: snow;
-    text-align: center;
-    padding: 20px;
-}
-#tGame
+    html body
+    {
+        background-color: dimgray;
+    }
+    #footer
+    {
+        clear: both;
+        background-color: black;
+        color: snow;
+        text-align: center;
+        padding: 20px;
+    }
+    #logo
+    {
+        background-color: black;
+        color: bisque;
+        text-align: center;
+        padding: 15px;
+    }
+    #tGame
     {
         border: solid thick black;
     }
-#wynikNapis
-{
-    clear: both;
-    text-align: center;
-    font-size: 2em;
-}
-#wynikCyfra
-{
-    clear: both;
-    text-align: center;
-    color: darkred;
-    padding-left: 8px;
-    font-size: 1.8em;
-}
-#wynikKto{
-    clear: both;
-    text-align: center;
-    color: darkred;
-    padding-left: 0px;
-    font-size: 1em;
-    
-}
-#buttonZacznij
-{
-    margin: 0 auto;
-    display: block;
-   width:inherit;
-    font-size: 1em;
-}
-#trudnoscNapis
-{
+    #guziczki
+    {
+        text-align: center;
+    } 
+    .zap
+    {
+        text-align: center;
+    }
+    .pola
+    {
         clear: both;
-    text-align: center;
-   font-size: 1em;
-}
-#poziomTrudnosci
+        background-color:cornflowerblue;
+        min-width: 35px;
+        height: 35px;
+        border-color: lightgray;
+        border-style: solid;
+        font-size: 30px;
+        text-align: center;
+        font-weight: 900;
+        color: white;
+        user-select: none;
+    }
+    .poleScore
+    {
+        border: solid thick black;      
+    }
+@media (max-width: 1099px){
+
+    #container
+    {
+        width: auto;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    #score
+    {
+        background-color: lightblue;
+        width:auto;
+        padding: 10px;
+        font-size: 2em;
+    }
+    #game
+    {
+        background-color: lightgray;
+        height: 690px;
+        width: auto;
+        font-size: 5em;
+        overflow-x:auto;
+        min-height: auto;
+        min-width: auto;
+        margin-left: auto;
+        margin-right: auto;
+   
+    }
+    #info
+    {
+        float:inherit;
+        background-color: lightgreen;
+        width: auto;
+        margin: auto;
+        padding: 10px;
+        font-size: 3em;
+   
+    }
+
+    #wynikNapis
+    {
+        clear: both;
+        text-align: center;
+        font-size: 2em;
+    }
+    #wynikCyfra
+    {
+        clear: both;
+        text-align: center;
+        color: darkred;
+        padding-left: 8px;
+        font-size: 1.8em;
+    }
+    #wynikKto
+    {
+        clear: both;
+        text-align: center;
+        color: darkred;
+        padding-left: 0px;
+        font-size: 1em;
+    }
+    #buttonZacznij
+    {
+        margin: 0 auto;
+        display: block;
+        width:inherit;
+        font-size: 1em;
+    }
+    #trudnoscNapis
+    {
+        clear: both;
+        text-align: center;
+        font-size: 1em;
+    }
+    #poziomTrudnosci
+    {
+        margin: 0 auto;
+        display: block;
+        width: 200px;
+        font-size: 1em;
+    }
+    #startNapis
+    {
+        clear: both;
+        text-align: center;
+        font-size: 1em;
+    }
+    #startWybor
+    {
+        margin: 0 auto;
+        display: block;
+        width: 200px;
+        font-size: 1em;
+    }
+
+    #guziczkiNag
+    {
+        font-size: 1em;
+    }
+    .wnap
+    {
+        display: none;
+        height: 20px;
+        font-size: 1em;
+        text-align: center;
+    }
+    .wcyf
+    {
+        display: none;
+        color: darkred;
+        padding-top: 0.5em;
+        font-size: 1em;
+        text-align: center;
+    }
+.nagScore
 {
-    margin: 0 auto;
     display: block;
-    width: 200px;
-    font-size: 1em;
-}
-#startNapis
-{
-     clear: both;
-    text-align: center;
-    font-size: 1em;
-}
-#startWybor
-{
-    margin: 0 auto;
-    display: block;
-    width: 200px;
-    font-size: 1em;
-}
-#guziczki
-{
-    text-align: center;
-}
-#guziczkiNag
-{
-    font-size: 1em;
-}
-.wnap
-{
-    height: 20px;
-    font-size: 1em;
-    text-align: center;
-}
-.wcyf
-{
-    color: darkred;
-    padding-top: 0.5em;
-    font-size: 1em;
-    text-align: center;
-}
-.zap
-{
-    text-align: center;
-}
-.nag
-{
     padding-top: 5px;
     padding-bottom: 5px;
     text-align: center;
-    color: brown;
-    font-size: 0.5em;
-    background-color:aquamarine;
-    margin-top: 0.2em;
-}
-.dane
-{
-    display: none;
-    font-size: 0.4em;
-}
-.pola
-{
-    clear: both;
-    background-color:cornflowerblue;
-    min-width: 35px;
-    height: 35px;
-
-    border-color: lightgray;
-    border-style: solid;
-    font-size: 30px;
-    text-align: center;
-    font-weight: 900;
+    background-color:dodgerblue;
     color: white;
+    font-size: 1em;
+    margin-top: 0.2em;
+    user-select: none;
+    
 }
+    .nag
+    {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        text-align: center;
+        color: brown;
+        font-size: 0.5em;
+        background-color:aquamarine;
+        margin-top: 0.2em;
+        user-select: none;
+    }
+    .dane
+    {
+        display: none;
+        font-size: 0.4em;
+    }
+
 }
 
-@media (min-width: 1099px){
+@media (min-width: 1100px){
     #container
 {
     width:1100px;
     margin-left: auto;
     margin-right: auto;
-}
-#logo
-{
-    background-color: black;
-    color: bisque;
-    text-align: center;
-    padding: 15px;
 }
 #score
 {
@@ -213,14 +224,6 @@ html body
     width: 220px;
     min-height: 700px;
     padding: 10px;
-}
-#footer
-{
-    clear: both;
-    background-color: black;
-    color: snow;
-    text-align: center;
-    padding: 20px;
 }
 #wynikNapis
 {
@@ -255,7 +258,7 @@ html body
 }
 #poziomTrudnosci
 {
-    width: 120px;
+    width: 100px;
     font-size: 15px
 }
 #startNapis
@@ -266,31 +269,38 @@ html body
 }
 #startWybor
 {
-    width: 120px;
+    width: 100px;
     font-size: 15px
-}
-#guziczki
-{
-    text-align: center;
 }
 #guziczkiNag
 {
     font-size: 14px;
 }
+#szczWynik
+{
+    font-size: 14px;    
+}
+#szczWynikPole
+{
+       display: none;  
+        
+}
+#ustawieniaPole
+{
+    display: none;    
+}
 .wnap
 {
+    display: none;
     height: 20px;
     font-size: 18px;
     text-align: center;
 }
 .wcyf
 {
+    display: none;
     color: darkred;
     font-size: 17px;
-    text-align: center;
-}
-.zap
-{
     text-align: center;
 }
 .nag
@@ -303,23 +313,24 @@ html body
     color: brown;
     font-size: 18px;
     margin-top: 0.2em;
+    user-select: none;
+}
+.nagScore
+{
+    display: block;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: center;
+    background-color:dodgerblue;
+    color: white;
+    font-size: 18px;
+    margin-top: 0.2em;
+    user-select: none;
+    
 }
 .dane
 {
     font-size: 15px;
-}
-.pola
-{
-
-    background-color:cornflowerblue;
-    width: 35px;
-    height: 35px;
-    border-color: lightgray;
-    border-style: solid;
-    font-size: 30px;
-    text-align: center;
-    font-weight: 900;
-    color: white;
 }
 }
 
